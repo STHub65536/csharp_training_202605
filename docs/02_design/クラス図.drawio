@@ -1,13 +1,13 @@
 <mxfile host="app.diagrams.net" pages="3">
   <diagram id="eUCI7CJfwcSKy9IW8C9F" name="Department">
-    <mxGraphModel dx="1257" dy="1813" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="765" dy="1561" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="2i9eVV3r1PEfjE6ppo1e-16" parent="1" style="html=1;whiteSpace=wrap;" value="«interface»&lt;br&gt;&lt;b&gt;IDepartmentRepository&lt;/b&gt;" vertex="1">
           <mxGeometry height="40" width="240" x="1650" y="-884" as="geometry" />
         </mxCell>
-        <mxCell id="2i9eVV3r1PEfjE6ppo1e-17" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ FindAll(): List&amp;lt;Department&amp;gt;&lt;div&gt;+ FindById(int id): Department?&lt;/div&gt;&lt;div&gt;+ Add(Department domain): void&lt;/div&gt;&lt;div&gt;+ UpdateById(int id): void&lt;/div&gt;&lt;div&gt;+DeleteById(int id): void&lt;/div&gt;" vertex="1">
+        <mxCell id="2i9eVV3r1PEfjE6ppo1e-17" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ FindAll(): List&amp;lt;Department&amp;gt;&lt;div&gt;+ FindByNumber(int number): Department?&lt;/div&gt;&lt;div&gt;+ Add(Department domain): void&lt;/div&gt;&lt;div&gt;+ UpdateByNumber(int number): void&lt;/div&gt;&lt;div&gt;+DeleteByNumber(int number): void&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="240" x="1650" y="-844" as="geometry" />
         </mxCell>
         <mxCell id="2i9eVV3r1PEfjE6ppo1e-24" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DepartmentRepository&lt;/b&gt;&lt;/div&gt;" vertex="1">
@@ -22,7 +22,7 @@
         <mxCell id="2i9eVV3r1PEfjE6ppo1e-29" parent="1" style="html=1;whiteSpace=wrap;" value="«interface»&lt;br&gt;&lt;b&gt;IDepartmentService&lt;/b&gt;" vertex="1">
           <mxGeometry height="40" width="240" x="1228" y="-1050" as="geometry" />
         </mxCell>
-        <mxCell id="2i9eVV3r1PEfjE6ppo1e-30" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ GetDepartmentList(): List&amp;lt;Department&amp;gt;&lt;div&gt;+ FindDepartment(int id): Department?&lt;/div&gt;&lt;div&gt;+ AddDepartment(Department domain): void&lt;/div&gt;&lt;div&gt;+ UpdateDepartment(int id): void&lt;/div&gt;&lt;div&gt;+DeleteDepartment(int id): void&lt;/div&gt;" vertex="1">
+        <mxCell id="2i9eVV3r1PEfjE6ppo1e-30" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ GetDepartmentList(): List&amp;lt;Department&amp;gt;&lt;div&gt;+ FindDepartment(int number): Department?&lt;/div&gt;&lt;div&gt;+ AddDepartment(Department domain): void&lt;/div&gt;&lt;div&gt;+ UpdateDepartment(int number): void&lt;/div&gt;&lt;div&gt;+DeleteDepartment(int number): void&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="240" x="1228" y="-1010" as="geometry" />
         </mxCell>
         <mxCell id="2i9eVV3r1PEfjE6ppo1e-31" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;DepartmentService&lt;/b&gt;&lt;/div&gt;" vertex="1">
@@ -113,13 +113,13 @@
           <mxGeometry height="50" width="330" x="1605" y="-1000" as="geometry" />
         </mxCell>
         <mxCell id="1DbSAZ7MzG7zbJFLRsLz-1" parent="1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;DepartmentController&lt;/b&gt;" vertex="1">
-          <mxGeometry height="20" width="373" x="780" y="-1030" as="geometry" />
+          <mxGeometry height="20" width="403" x="750" y="-1030" as="geometry" />
         </mxCell>
         <mxCell id="1DbSAZ7MzG7zbJFLRsLz-2" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="&amp;nbsp;- DepartmentViewModelAdapter _adapter&lt;div&gt;&amp;nbsp;- IDepartmentService _service&lt;/div&gt;" vertex="1">
-          <mxGeometry height="50" width="373" x="780" y="-1010" as="geometry" />
+          <mxGeometry height="50" width="403" x="750" y="-1010" as="geometry" />
         </mxCell>
-        <mxCell id="1DbSAZ7MzG7zbJFLRsLz-3" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ DepartmentController(DepartmentViewModelAdapter adapter,IDepartmentService service)&lt;div&gt;+ DepartmentList(): IACtionResult&lt;/div&gt;&lt;div&gt;+ DepartmentList(int id): IActionResult&lt;/div&gt;&lt;div&gt;+ DepartmentRegister(): IActionResult&lt;/div&gt;&lt;div&gt;+ DepartmentRegister(DepartmentViewModel vm): IActionResult&amp;nbsp;&lt;/div&gt;&lt;div&gt;+ DepartmentUpdate(int id):&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ DepartmentUpdate(int id, DepartmentViewModel vm):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="120" width="373" x="780" y="-960" as="geometry" />
+        <mxCell id="1DbSAZ7MzG7zbJFLRsLz-3" parent="1" style="html=1;whiteSpace=wrap;align=left;" value="+ DepartmentController(DepartmentViewModelAdapter adapter,IDepartmentService service)&lt;div&gt;+ DepartmentList(): IACtionResult&lt;/div&gt;&lt;div&gt;+ DepartmentList(int number): IActionResult&lt;/div&gt;&lt;div&gt;+ DepartmentRegister(): IActionResult&lt;/div&gt;&lt;div&gt;+ DepartmentRegister(DepartmentViewModel vm): IActionResult&amp;nbsp;&lt;/div&gt;&lt;div&gt;+ DepartmentUpdate(int number):&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ DepartmentUpdate(int number, DepartmentViewModel vm):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="403" x="750" y="-960" as="geometry" />
         </mxCell>
         <mxCell id="1DbSAZ7MzG7zbJFLRsLz-4" edge="1" parent="1" source="1DbSAZ7MzG7zbJFLRsLz-3" style="endArrow=openThin;html=1;rounded=0;dashed=1;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -200,14 +200,14 @@
     </mxGraphModel>
   </diagram>
   <diagram name="Employee" id="ctHemjxWDjDr60AbpEuo">
-    <mxGraphModel dx="1257" dy="1813" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="880" dy="1620" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-0" />
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-1" parent="L4VuaSQB8rrQu0eL9hJd-0" />
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-2" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="«interface»&lt;br&gt;&lt;b&gt;IEmployeeRepository&lt;/b&gt;" vertex="1">
           <mxGeometry height="40" width="240" x="1440" y="-924" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-3" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ FindAll(): List&amp;lt;Employee&amp;gt;&lt;div&gt;+ FindById(int id): Employee?&lt;/div&gt;&lt;div&gt;+ Add(Employee&amp;nbsp;domain): void&lt;/div&gt;&lt;div&gt;+ UpdateById(int id): void&lt;/div&gt;&lt;div&gt;+DeleteById(int id): void&lt;/div&gt;" vertex="1">
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-3" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ FindAll(): List&amp;lt;Employee&amp;gt;&lt;div&gt;+ FindByNumber(int number): Employee?&lt;/div&gt;&lt;div&gt;+ Add(Employee&amp;nbsp;domain): void&lt;/div&gt;&lt;div&gt;+ UpdateByNumber(int number): void&lt;/div&gt;&lt;div&gt;+ DeleteByNumber(int number): void&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="240" x="1440" y="-884" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-4" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b&gt;&lt;span style=&quot;text-align: left; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Repository&lt;/span&gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
@@ -222,7 +222,7 @@
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-6" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="«interface»&lt;br&gt;&lt;b&gt;IEmployeeService&lt;/b&gt;" vertex="1">
           <mxGeometry height="40" width="240" x="1018" y="-1090" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-7" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ GetEmployeeList(): List&amp;lt;Employee&amp;gt;&lt;div&gt;+ Find&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int id):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;?&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Add&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;domain): void&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Update&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int id): void&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+Delete&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int id): void&lt;/span&gt;&lt;/div&gt;" vertex="1">
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-7" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ GetEmployeeList(): List&amp;lt;Employee&amp;gt;&lt;div&gt;+ Find&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int number):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;?&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Add&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;domain): void&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+ Update&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int number): void&lt;/span&gt;&lt;/div&gt;&lt;div&gt;+Delete&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;(int number): void&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="80" width="240" x="1018" y="-1050" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-8" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;EmployeeService&lt;/b&gt;&lt;/div&gt;" vertex="1">
@@ -285,17 +285,17 @@
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-21" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;span style=&quot;text-align: left;&quot;&gt;&lt;b&gt;Employee&lt;/b&gt;&lt;/span&gt;&lt;b&gt;Entity&lt;/b&gt;" vertex="1">
           <mxGeometry height="20" width="150" x="1917" y="-1120" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-22" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string Mail&lt;/div&gt;&lt;div&gt;+ int? DeptNo&lt;/div&gt;&lt;div&gt;+ DepartmentEntity? Dept&lt;/div&gt;" vertex="1">
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-22" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string MailAddress&lt;/div&gt;&lt;div&gt;+ int? DeptNo&lt;/div&gt;&lt;div&gt;+ DepartmentEntity? Dept&lt;/div&gt;" vertex="1">
           <mxGeometry height="90" width="150" x="1917" y="-1100" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-23" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;Employee&lt;/b&gt;" vertex="1">
-          <mxGeometry height="20" width="240" x="1018" y="-859" as="geometry" />
+          <mxGeometry height="20" width="410" x="980" y="-859" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-24" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string Mail&lt;/div&gt;&lt;div&gt;+ int? DeptNo&lt;/div&gt;&lt;div&gt;+ Department? Dept&amp;nbsp;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="89" width="240" x="1018" y="-839" as="geometry" />
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-24" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string MailAddress&lt;/div&gt;&lt;div&gt;+ int? DeptNo&lt;/div&gt;&lt;div&gt;+ Department? Dept&amp;nbsp;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="89" width="410" x="980" y="-839" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-25" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ Employee(int DeptNo,string DeptName)&lt;div&gt;+ Equals(object? obj): bool&lt;/div&gt;&lt;div&gt;+ GetHashCode(): int&lt;/div&gt;" vertex="1">
-          <mxGeometry height="50" width="240" x="1018" y="-749" as="geometry" />
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-25" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ Employee(int? EmpNo,string EmpName,DateOnly Birthday,string MailAddress,int? DeptNo,Department? Dept)&lt;div&gt;+ Employee(int? EmpNo,string EmpName,DateOnly Birthday,string MailAddress,int? DeptNo,Department? Dept)&lt;br&gt;&lt;div&gt;+ Equals(object? obj): bool&lt;/div&gt;&lt;div&gt;+ GetHashCode(): int&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="89" width="410" x="980" y="-749" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-26" edge="1" parent="L4VuaSQB8rrQu0eL9hJd-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
           <mxGeometry relative="1" as="geometry">
@@ -313,13 +313,13 @@
           <mxGeometry height="50" width="330" x="1395" y="-1040" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-30" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;EmployeeController&lt;/b&gt;" vertex="1">
-          <mxGeometry height="20" width="373" x="570" y="-1070" as="geometry" />
+          <mxGeometry height="20" width="390" x="570" y="-1070" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-31" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="&amp;nbsp;- EmployeeViewModelAdapter _employeeAdapter&lt;div&gt;&amp;nbsp;- DepartmentViewModelAdapter _departmentAdapter&lt;br&gt;&lt;div&gt;&amp;nbsp;- IEmployeeService _service&lt;/div&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="50" width="373" x="570" y="-1050" as="geometry" />
+          <mxGeometry height="50" width="390" x="570" y="-1050" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-32" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ EmployeeController(EmployeeViewModelAdapter employeeAdapter, DepartmentViewModelAdapter departmentAdapter, IEmployeeService service)&lt;div&gt;+ EmployeeList(): IACtionResult&lt;/div&gt;&lt;div&gt;+ EmployeeList(int id): IActionResult&lt;/div&gt;&lt;div&gt;+ EmployeeRegister(): IActionResult&lt;/div&gt;&lt;div&gt;+ EmployeeRegister(EmployeeViewModel vm): IActionResult&amp;nbsp;&lt;/div&gt;&lt;div&gt;+ EmployeeUpdate(int id):&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+&amp;nbsp;&lt;/span&gt;Employee&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Update(int id,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ViewModel vm):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="130" width="373" x="570" y="-1000" as="geometry" />
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-32" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ EmployeeController(EmployeeViewModelAdapter employeeAdapter, DepartmentViewModelAdapter departmentAdapter, IEmployeeService service)&lt;div&gt;+ EmployeeList(): IACtionResult&lt;/div&gt;&lt;div&gt;+ EmployeeList(int id): IActionResult&lt;/div&gt;&lt;div&gt;+ EmployeeRegister(): IActionResult&lt;/div&gt;&lt;div&gt;+ EmployeeRegister(EmployeeViewModel vm): IActionResult&amp;nbsp;&lt;/div&gt;&lt;div&gt;+ EmployeeUpdate(int number):&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+&amp;nbsp;&lt;/span&gt;Employee&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Update(int number,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ViewModel vm):&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;IActionResult&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="130" width="390" x="570" y="-1000" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-33" edge="1" parent="L4VuaSQB8rrQu0eL9hJd-1" source="L4VuaSQB8rrQu0eL9hJd-32" style="endArrow=openThin;html=1;rounded=0;dashed=1;endFill=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -337,12 +337,12 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-36" parent="L4VuaSQB8rrQu0eL9hJd-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&amp;lt;&amp;lt;call&amp;gt;&amp;gt;&lt;/b&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="950" y="-1050" as="geometry" />
+          <mxGeometry height="30" width="60" x="960" y="-1000" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-37" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;EmployeeViewModel&lt;/b&gt;" vertex="1">
           <mxGeometry height="20" width="240" x="636.5" y="-550" as="geometry" />
         </mxCell>
-        <mxCell id="L4VuaSQB8rrQu0eL9hJd-38" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string Mail&lt;/div&gt;&lt;div&gt;+ int DeptNo&lt;/div&gt;&lt;div&gt;+ int? ChangedDeptNo&lt;/div&gt;" vertex="1">
+        <mxCell id="L4VuaSQB8rrQu0eL9hJd-38" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;align=left;" value="+ int? EmpNo&lt;div&gt;+ string EmpName&lt;/div&gt;&lt;div&gt;+ DateOnly Birthday&lt;/div&gt;&lt;div&gt;+ string MailAddress&lt;/div&gt;&lt;div&gt;+ int DeptNo&lt;/div&gt;&lt;div&gt;+ int? ChangedDeptNo&lt;/div&gt;" vertex="1">
           <mxGeometry height="110" width="240" x="636.5" y="-530" as="geometry" />
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-39" parent="L4VuaSQB8rrQu0eL9hJd-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&amp;lt;&amp;lt;EmployeeViewModel,&lt;/b&gt;&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&amp;gt;&amp;gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
@@ -373,7 +373,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="L4VuaSQB8rrQu0eL9hJd-45" parent="L4VuaSQB8rrQu0eL9hJd-1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&amp;lt;&amp;lt;EmployeeEntity,&lt;/b&gt;&lt;div&gt;&lt;b style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Employee&amp;gt;&amp;gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
-          <mxGeometry height="30" width="130" x="1300" y="-749" as="geometry" />
+          <mxGeometry height="30" width="130" x="1430" y="-669" as="geometry" />
         </mxCell>
         <mxCell id="tJ6zr7Ry7cS49w2Clh0y-0" parent="L4VuaSQB8rrQu0eL9hJd-1" style="html=1;whiteSpace=wrap;" value="&lt;b&gt;InternalExceptionLoggingMiddleware&lt;/b&gt;" vertex="1">
           <mxGeometry height="20" width="373" x="90" y="-1060" as="geometry" />
