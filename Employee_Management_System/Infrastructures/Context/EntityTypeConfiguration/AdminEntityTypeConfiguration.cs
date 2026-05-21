@@ -13,22 +13,22 @@ public class AdminEntityTypeConfiguration : IEntityTypeConfiguration<AdminEntity
     public void Configure(EntityTypeBuilder<AdminEntity> builder)
     {
         // テーブル名
-            builder.ToTable("administrator");
+       builder.ToTable("administrator");
 
-            // 主キー
-            builder.HasKey(a => a.UserId);
+       // 主キー
+       builder.HasKey(a => a.UserId);
 
-            // カラム
-            builder.Property(a => a.UserId)
-                   .HasColumnName("user_id")
-                   .IsRequired();
-        
-            builder.Property(a => a.Password)
-                   .HasColumnName("password")
-                   .IsRequired();
+       // カラム
+       builder.Property(a => a.UserId)
+              .HasColumnName("user_id")
+              .IsRequired();
+       
+       builder.Property(a => a.Password)
+              .HasColumnName("password")
+              .IsRequired();
 
-            builder.Property(a => a.UserName)
-                   .HasColumnName("user_name")
-                   .IsRequired();
+       builder.Property(a => a.UserName)
+              .HasColumnName("user_name")
+              .IsRequired();
     }
 }
