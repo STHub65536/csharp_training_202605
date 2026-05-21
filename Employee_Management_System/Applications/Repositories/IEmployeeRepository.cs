@@ -11,6 +11,8 @@ public interface IEmployeeRepository
 
     Employee? FindByNumber(int number);
 
+    bool HasSameMailAddress(string mailAddress);
+
     void Add(Employee domain);
 
     void UpdateByNumber(int number, Employee domain);
