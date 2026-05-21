@@ -1,0 +1,19 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Employee_Management_System.Applications.Domains;
+
+namespace Employee_Management_System.Applications.Repositories;
+public interface IEmployeeRepository
+{
+    List<Employee> FindAll();
+
+    Employee? FindByNumber(int number);
+
+    void Add(Employee domain);
+
+    void UpdateByNumber(int number, Employee domain);
+
+    void DeleteByNumber(int number);
+}
