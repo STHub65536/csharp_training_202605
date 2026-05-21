@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
-using Employee_Management_System.Presentations.ViewModels.ViewModelAttributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Employee_Management_System.Presentations.ViewModels;
@@ -21,7 +20,6 @@ public class EmployeeViewModel
 
     [Display(Name = "生年月日")]
     [Required(ErrorMessage = "{0}は入力必須です")]
-    [Age(15, 100, ErrorMessage = "15歳～100歳までの方しか登録できません")]
     public DateOnly Birthday { get; set; }
 
     [Display(Name = "メールアドレス")]
