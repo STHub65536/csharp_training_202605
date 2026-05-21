@@ -59,12 +59,11 @@ public class EmployeeRepository : IEmployeeRepository
         _context.SaveChanges();
     }
 
-    public void UpdateByNumber(int number, Employee domain)
+    public void UpdateByNumber(Employee domain)
     {
-        EmployeeEntity targetEntity = _context.Employees.Find(number)!;
+        EmployeeEntity targetEntity = _context.Employees.Find(domain.EmpNo)!;
         EmployeeEntity updateEntity = _adapter.Convert(domain);
 
-        targetEntity.EmpNo = updateEntity.EmpNo;
         targetEntity.EmpName = updateEntity.EmpName;
         targetEntity.Birthday = updateEntity.Birthday;
         targetEntity.MailAddress = updateEntity.MailAddress;

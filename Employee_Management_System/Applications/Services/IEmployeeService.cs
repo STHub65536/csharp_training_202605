@@ -9,6 +9,6 @@ public interface IEmployeeService
 {
     List<Employee> GetEmployeeList();
     void AddEmployee(Employee domain);
-    void UpdateEmployee(int no, Employee domain);
-    void DeleteEmployee(int emoloyeeNo);
+    void UpdateEmployee(Employee domain);
+    void DeleteEmployee(int number);
 }
