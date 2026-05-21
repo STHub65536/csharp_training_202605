@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Presentations.ViewModels.ViewModelAttributes;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -28,7 +29,9 @@ public class EmployeeViewModel
     [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")]
     public string MailAddress { get; set; }
 
-    public int? DepartmentNo { get; set; }
+    public int? DeptNo { get; set; }
+
+    public Department? Dept { get; set; }
 
     public int? ChangedDeptNo { get; set; }
 
