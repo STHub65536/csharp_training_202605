@@ -23,6 +23,15 @@ public class Employee
         this.Dept = Dept;
     }
 
+    public Employee(int? EmpNo, string EmpName, DateOnly Birthday, string MailAddress, int? DeptNo)
+    {
+        this.EmpNo = EmpNo;
+        this.EmpName = EmpName;
+        this.Birthday = Birthday;
+        this.MailAddress = MailAddress;
+        this.DeptNo = DeptNo;
+    }
+
     public override bool Equals(object? obj)
     {
         if(ReferenceEquals(this, obj))
