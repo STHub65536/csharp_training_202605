@@ -11,6 +11,8 @@ public interface IDepartmentRepository
 
     Department? FindByNumber(int number);
 
+    bool HasSameDeptName(string deptName);
+
     void Add(Department domain);
 
     void UpdateByNumber(int number, Department domain);
