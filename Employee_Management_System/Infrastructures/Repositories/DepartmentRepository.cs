@@ -37,6 +37,13 @@ public class DepartmentRepository : IDepartmentRepository
         return entity != null ? _adapter.Restore(entity) : null;
     }
 
+    public bool HasSameDeptName(string deptName)
+    {
+        DepartmentEntity? entity = _context.Departments.Where(d => d.DeptName == deptName)
+                                                       .FirstOrDefault();
+        return entity == null? false : true;
+    }
+
     public void Add(Department domain)
     {
         DepartmentEntity entity = _adapter.Convert(domain);
