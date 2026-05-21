@@ -9,14 +9,16 @@ public class Employee
     public int? EmpNo { get; }
     public string EmpName { get; }
     public DateOnly Birthday { get; }
+    public string MailAddress { get; }
     public int? DeptNo { get; }
     public Department? Dept { get; }
 
-    public Employee(int? EmpNo, string EmpName, DateOnly Birthday, int? DeptNo, Department? Dept)
+    public Employee(int? EmpNo, string EmpName, DateOnly Birthday, string MailAddress, int? DeptNo, Department? Dept)
     {
         this.EmpNo = EmpNo;
         this.EmpName = EmpName;
         this.Birthday = Birthday;
+        this.MailAddress = MailAddress;
         this.DeptNo = DeptNo;
         this.Dept = Dept;
     }
