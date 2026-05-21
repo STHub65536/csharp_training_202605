@@ -9,9 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace Employee_Management_System.Infrastructures.Context;
 public class AppDbContext : DbContext
 {
-    private DbSet<DepartmentEntity> Departments { get; set; }
-    private DbSet<EmployeeEntity> Employees { get; set; }
-    private DbSet<AdminEntity> Admins { get; set; }
+    public DbSet<DepartmentEntity> Departments { get; set; }
+    public DbSet<EmployeeEntity> Employees { get; set; }
+    public DbSet<AdminEntity> Admins { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options)
         : base(options)
