@@ -26,6 +26,7 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
+            //エラーが発生したコード
             // List<Department> entityList = _context.Departments.Select(d => _adapter.Restore(d))
             //                                                   .OrderBy(d => d.DeptNo)
             //                                                   .ToList();
