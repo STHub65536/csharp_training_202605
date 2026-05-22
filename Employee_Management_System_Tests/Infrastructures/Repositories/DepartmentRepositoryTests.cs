@@ -71,6 +71,42 @@ public sealed class DepartmentRepositoryTests
         Assert.IsInstanceOfType<InvalidOperationException>(exception.InnerException);
     }
 
+    [TestMethod]
+    public void Create_WithItemAndStock_AddsEntitiesAndSavesTwice()
+    {
+        using var context = CreateContext(Array.Empty<DepartmentEntity>());
+        var repository = CreateRepository(context);
+        var item = new Department(101,"総務部");
+        var item2 = new Department(102,"情報システム部");
+        repository.Add(item);
+        repository.Add(item2);
+
+        var savedDepartments = ((QueryableDbSet<DepartmentEntity>)context.Departments).Entities;
+        Assert.AreEqual(2, savedDepartments.Count);
+
+        var savedDepartment = savedDepartments[0];
+        Assert.AreEqual(101, savedDepartment.DeptNo);
+        Assert.AreEqual("総務部", savedDepartment.DeptName);
+
+        var savedDepartment2 = savedDepartments[1];
+        Assert.AreEqual(102, savedDepartment2.DeptNo);
+        Assert.AreEqual("情報システム部", savedDepartment2.DeptName);
+
+        Assert.AreEqual(2, ((TestAppDbContext)context).SaveChangesCallCount);
+    }
+
+    [TestMethod]
+    public void Create_WhenDbSetThrows_WrapsExceptionInInternalException()
+    {
+        using var context = CreateContext(new ThrowingDbSet<DepartmentEntity>());
+        var repository = CreateRepository(context);
+
+        var exception = Assert.ThrowsException<InternalException>(
+            () => repository.Add(new Department(101, "総務部")));
+
+        Assert.IsInstanceOfType<InvalidOperationException>(exception.InnerException);
+    }
+
     private static DepartmentRepository CreateRepository(AppDbContext context)
     {
         return new DepartmentRepository(context, new DepartmentEntityAdapter());
@@ -94,5 +130,21 @@ public sealed class DepartmentRepositoryTests
     {
         Assert.AreEqual(id, department.DeptNo);
         Assert.AreEqual(name, department.DeptName);
+    }
+
+    private static TestAppDbContext CreateContext(QueryableDbSet<DepartmentEntity> departments)
+    {
+        return new TestAppDbContext
+        {
+            Departments = departments,
+        };
+    }
+
+    private static TestAppDbContext CreateContext(ThrowingDbSet<DepartmentEntity> departments)
+    {
+        return new TestAppDbContext
+        {
+            Departments = departments,
+        };
     }
 }

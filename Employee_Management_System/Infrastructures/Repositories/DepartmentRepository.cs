@@ -67,12 +67,10 @@ public class DepartmentRepository : IDepartmentRepository
 
     public void Add(Department domain)
     {
-        
         try
         {
             DepartmentEntity entity = _adapter.Convert(domain);
             _context.Departments.Add(entity);
-
             _context.SaveChanges();
         }
         catch(Exception e)
