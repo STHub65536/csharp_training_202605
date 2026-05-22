@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Applications.Repositories;
+using Employee_Management_System.Exceptions;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
 using Employee_Management_System.Infrastructures.Entities;
@@ -24,59 +25,102 @@ public class EmployeeRepository : IEmployeeRepository
     
     public List<Employee> FindAll()
     {
-        List<EmployeeEntity> entityList = _context.Employees.Include(e => e.Dept)
-                                                            .OrderBy(e => e.EmpNo)
-                                                            .ToList();
-        List<Employee> domainList = new List<Employee>();
-        foreach(EmployeeEntity e in entityList)
+        try
         {
-            domainList.Add(_adapter.Restore(e));
-        }
+            List<EmployeeEntity> entityList = _context.Employees.Include(e => e.Dept)
+                                                                .OrderBy(e => e.EmpNo)
+                                                                .ToList();
+            List<Employee> domainList = new List<Employee>();
+            foreach(EmployeeEntity e in entityList)
+            {
+                domainList.Add(_adapter.Restore(e));
+            }
 
-        return domainList;
+            return domainList;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("すべての社員を取得できませんでした。",e);
+        }
+        
     }
 
     public Employee? FindByNumber(int number)
     {
-        EmployeeEntity? entity = _context.Employees.Find(number);
-        
-        return entity != null ? _adapter.Restore(entity) : null;
+        try
+        {
+            EmployeeEntity? entity = _context.Employees.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            
+            return entity != null ? _adapter.Restore(entity) : null;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した社員を取得できませんでした。",e);
+        }
     }
 
     public bool HasSameMailAddress(string mailAddress)
     {
-        EmployeeEntity? entity = _context.Employees.Where(e => e.MailAddress == mailAddress)
-                                                   .FirstOrDefault();
-        
-        return entity == null? false: true;
+        try
+        {
+            EmployeeEntity? entity = _context.Employees.Where(e => e.MailAddress == mailAddress)
+                                                    .FirstOrDefault();
+            
+            return entity == null? false: true;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("メールアドレスでの検索時にエラーが発生しました。",e);
+        }
     }
 
     public void Add(Employee domain)
     {
-        EmployeeEntity target = _adapter.Convert(domain);
-        _context.Employees.Add(target);
+        try
+        {
+            EmployeeEntity target = _adapter.Convert(domain);
+            _context.Employees.Add(target);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("社員を追加できませんでした。",e);
+        }
     }
 
     public void UpdateByNumber(Employee domain)
     {
-        EmployeeEntity targetEntity = _context.Employees.Find(domain.EmpNo)!;
-        EmployeeEntity updateEntity = _adapter.Convert(domain);
+        try
+        {
+            EmployeeEntity targetEntity = _context.Employees.Where(d => d.DeptNo == domain.EmpNo).FirstOrDefault()!;
+            EmployeeEntity updateEntity = _adapter.Convert(domain);
 
-        targetEntity.EmpName = updateEntity.EmpName;
-        targetEntity.Birthday = updateEntity.Birthday;
-        targetEntity.MailAddress = updateEntity.MailAddress;
-        targetEntity.DeptNo = updateEntity.DeptNo;
+            targetEntity.EmpName = updateEntity.EmpName;
+            targetEntity.Birthday = updateEntity.Birthday;
+            targetEntity.MailAddress = updateEntity.MailAddress;
+            targetEntity.DeptNo = updateEntity.DeptNo;
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した社員を更新できませんでした",e);
+        }
     }
 
     public void DeleteByNumber(int number)
     {
-        EmployeeEntity? entity = _context.Employees.Find(number)!;
-        _context.Employees.Remove(entity);
+        try
+        {
+            EmployeeEntity? entity = _context.Employees.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            _context.Employees.Remove(entity);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した社員を削除できませんでした",e);
+        }
     }
 }

@@ -38,44 +38,81 @@ public class DepartmentRepository : IDepartmentRepository
     }
 
     public Department? FindByNumber(int number)
-    {;
-        DepartmentEntity? entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault();
-        
-        return entity != null ? _adapter.Restore(entity) : null;
+    {
+        try
+        {
+            DepartmentEntity? entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault();
+
+            return entity != null ? _adapter.Restore(entity) : null;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した部署を取得できませんでした。",e);
+        }
     }
 
     public bool HasSameDeptName(string deptName)
     {
-        DepartmentEntity? entity = _context.Departments.Where(d => d.DeptName == deptName)
-                                                       .FirstOrDefault();
-        return entity == null? false : true;
+        try
+        {
+            DepartmentEntity? entity = _context.Departments.Where(d => d.DeptName == deptName)
+                                                        .FirstOrDefault();
+            return entity == null? false : true;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("名前での検索時にエラーが発生しました。",e);
+        }
     }
 
     public void Add(Department domain)
     {
-        DepartmentEntity entity = _adapter.Convert(domain);
-        _context.Departments.Add(entity);
+        
+        try
+        {
+            DepartmentEntity entity = _adapter.Convert(domain);
+            _context.Departments.Add(entity);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("部署を追加できませんでした。",e);
+        }
     }
 
     public void UpdateByNumber(int number, Department domain)
     {
-        DepartmentEntity targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
-        DepartmentEntity updateEntity = _adapter.Convert(domain);
+        try
+        {
+            DepartmentEntity targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            DepartmentEntity updateEntity = _adapter.Convert(domain);
 
-        targetEntity.DeptNo = updateEntity.DeptNo;
-        targetEntity.DeptName = updateEntity.DeptName;
+            targetEntity.DeptNo = updateEntity.DeptNo;
+            targetEntity.DeptName = updateEntity.DeptName;
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定された部署を更新できませんでした。",e);
+        }
+        
     }
 
     public void DeleteByNumber(int number)
     {
-        DepartmentEntity entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
-        
-        _context.Departments.Remove(entity);
+        try
+        {
+            DepartmentEntity entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            
+            _context.Departments.Remove(entity);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定された部署を削除できませんでした。",e);
+        }
     }
 }
