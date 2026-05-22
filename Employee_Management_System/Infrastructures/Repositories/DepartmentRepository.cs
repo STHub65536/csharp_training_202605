@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Applications.Repositories;
+using Employee_Management_System.Exceptions;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
 using Employee_Management_System.Infrastructures.Entities;
@@ -23,16 +24,22 @@ public class DepartmentRepository : IDepartmentRepository
     
     public List<Department> FindAll()
     {
-        List<Department> entityList = _context.Departments.Select(d => _adapter.Restore(d))
+        try
+        {
+            List<Department> entityList = _context.Departments.Select(d => _adapter.Restore(d))
                                                           .OrderBy(d => d.DeptNo)
                                                           .ToList();
-
-        return entityList;
+            return entityList;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("すべての部署を取得できませんでした。",e);
+        }
     }
 
     public Department? FindByNumber(int number)
-    {
-        DepartmentEntity? entity = _context.Departments.Find(number);
+    {;
+        DepartmentEntity? entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault();
         
         return entity != null ? _adapter.Restore(entity) : null;
     }
@@ -54,7 +61,7 @@ public class DepartmentRepository : IDepartmentRepository
 
     public void UpdateByNumber(int number, Department domain)
     {
-        DepartmentEntity targetEntity = _context.Departments.Find(number)!;
+        DepartmentEntity targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
         DepartmentEntity updateEntity = _adapter.Convert(domain);
 
         targetEntity.DeptNo = updateEntity.DeptNo;
@@ -65,7 +72,7 @@ public class DepartmentRepository : IDepartmentRepository
 
     public void DeleteByNumber(int number)
     {
-        DepartmentEntity entity = _context.Departments.Find(number)!;
+        DepartmentEntity entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
         
         _context.Departments.Remove(entity);
 

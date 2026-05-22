@@ -11,23 +11,23 @@ using WebApp_Exercise.Tests.TestDoubles;
 namespace Employee_Management_System_Tests.Infrastructures.Repositories;
 
 [TestClass]
-public sealed class ItemCategoryRepositoryTests
+public sealed class DepartmentRepositoryTests
 {
     [TestMethod]
     public void FindAll_ReturnsAllCategories()
     {
         using var context = CreateContext(
         [
-            new DepartmentEntity { DeptNo = 1, DeptName = "Books" },
-            new DepartmentEntity { DeptNo = 2, DeptName = "Games" },
+            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
+            new DepartmentEntity { DeptNo = 102, DeptName = "情報システム部" },
         ]);
         var repository = CreateRepository(context);
 
-        var categories = repository.FindAll();
+        var departments = repository.FindAll();
 
-        Assert.AreEqual(2, categories.Count);
-        AssertCategory(categories[0], 1, "Books");
-        AssertCategory(categories[1], 2, "Games");
+        Assert.AreEqual(2, departments.Count);
+        AssertCategory(departments[0], 101, "総務部");
+        AssertCategory(departments[1], 102, "情報システム部");
     }
 
     [TestMethod]
@@ -35,15 +35,15 @@ public sealed class ItemCategoryRepositoryTests
     {
         using var context = CreateContext(
         [
-            new DepartmentEntity { DeptNo = 1, DeptName = "Books" },
-            new DepartmentEntity { DeptNo = 2, DeptName = "Games" },
+            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
+            new DepartmentEntity { DeptNo = 102, DeptName = "情報システム部" },
         ]);
         var repository = CreateRepository(context);
 
-        var category = repository.FindByNumber(2);
+        var department = repository.FindByNumber(102);
 
-        Assert.IsNotNull(category);
-        AssertCategory(category, 2, "Games");
+        Assert.IsNotNull(department);
+        AssertCategory(department, 102, "情報システム部");
     }
 
     [TestMethod]
@@ -51,13 +51,13 @@ public sealed class ItemCategoryRepositoryTests
     {
         using var context = CreateContext(
         [
-            new DepartmentEntity { DeptNo = 1, DeptName = "Books" },
+            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
         ]);
         var repository = CreateRepository(context);
 
-        var category = repository.FindByNumber(2);
+        var department = repository.FindByNumber(102);
 
-        Assert.IsNull(category);
+        Assert.IsNull(department);
     }
 
     [TestMethod]
@@ -81,18 +81,18 @@ public sealed class ItemCategoryRepositoryTests
         return CreateContext(new QueryableDbSet<DepartmentEntity>(entities));
     }
 
-    private static AppDbContext CreateContext(DbSet<DepartmentEntity> itemCategories)
+    private static AppDbContext CreateContext(DbSet<DepartmentEntity> departments)
     {
         var options = new DbContextOptionsBuilder<AppDbContext>().Options;
         return new AppDbContext(options)
         {
-            Departments = itemCategories,
+            Departments = departments,
         };
     }
 
-    private static void AssertCategory(Department category, int id, string name)
+    private static void AssertCategory(Department department, int id, string name)
     {
-        Assert.AreEqual(id, category.DeptNo);
-        Assert.AreEqual(name, category.DeptName);
+        Assert.AreEqual(id, department.DeptNo);
+        Assert.AreEqual(name, department.DeptName);
     }
 }
