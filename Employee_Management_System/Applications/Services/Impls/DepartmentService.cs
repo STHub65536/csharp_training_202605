@@ -23,6 +23,11 @@ public class DepartmentService : IDepartmentService
         return _repository.FindAll();
     }
 
+    public Department? FindDepartment(int number)
+    {
+        return _repository.FindByNumber(number);
+    }
+
     public void AddDepartment(Department domain)
     {
         if(_repository.FindByNumber(domain.DeptNo) == null && !_repository.HasSameDeptName(domain.DeptName))

@@ -8,6 +8,7 @@ namespace Employee_Management_System.Applications.Services;
 public interface IDepartmentService
 {
     List<Department> GetDepartmentList();
+    Department? FindDepartment(int number);
     void AddDepartment(Department domain);
     void UpdateDepartment(int no, Department domain);
     void DeleteDepartment(int no);
