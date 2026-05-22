@@ -26,10 +26,16 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            List<Department> entityList = _context.Departments.Select(d => _adapter.Restore(d))
-                                                          .OrderBy(d => d.DeptNo)
-                                                          .ToList();
-            return entityList;
+            // List<Department> entityList = _context.Departments.Select(d => _adapter.Restore(d))
+            //                                                   .OrderBy(d => d.DeptNo)
+            //                                                   .ToList();
+            List<DepartmentEntity> entity = _context.Departments.ToList();
+            List<Department> domainList = new List<Department>();
+            foreach(DepartmentEntity e in entity)
+            {
+                domainList.Add(_adapter.Restore(e));
+            }
+            return domainList;
         }
         catch(Exception e)
         {

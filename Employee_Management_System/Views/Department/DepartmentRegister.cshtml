@@ -1,0 +1,20 @@
+<h3>新規部署登録</h3>
+
+@using Employee_Management_System.Presentations.ViewModels
+@model DepartmentViewModel
+<form asp-controller="Department" asp-action="DepartmentRegister" method="post">
+    <label asp-for="DeptNo" class="form-label">部署番号</label>
+    <div><input type="text" asp-for="DeptNo" class="form-control" placeholder="100～999までの数字で入力"></div>
+    <div>
+        <span asp-validation-for="DeptNo" class="text-danger"></span>
+    </div>
+    <label asp-for="DeptName" class="form-label">部署名</label>
+    <div><input type="text" asp-for="DeptName" class="form-control" placeholder="日本語で「～部」の形式で入力"></div>
+    <div>
+        <span asp-validation-for="DeptName" class="text-danger"></span>
+    </div>
+    <div>
+        <span class="text-danger">@ViewData["ExistingNoError"]</span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3" id="submitButton">送信</button>
+</form>

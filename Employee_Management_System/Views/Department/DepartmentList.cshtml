@@ -1,0 +1,70 @@
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+@using Employee_Management_System.Applications.Domains
+@using Employee_Management_System.Presentations.ViewModels
+@model List<DepartmentViewModel>
+
+@{
+    if(Model.Count == 0){
+        <h4>部署が登録されていません</h4>
+        <a asp-area="" asp-controller="Department" asp-action="DepartmentRegister">部署を登録する</a>
+    }
+    else{
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">部署一覧</h4>
+            <a asp-area="" asp-controller="Department" asp-action="DepartmentRegister" class="btn btn-primary">
+                新規登録
+            </a>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>部署番号</th>
+                    <th>部署名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int i = 1;
+                    foreach(DepartmentViewModel vm in Model){
+                        <tr>
+                            <td id="DeptNo-@(i)">@vm.DeptNo</td>
+                            <td id="DeptName-@(i)">@vm.DeptName</td>
+                            <td>
+                                <div class="d-flex">
+                                    <a asp-area="" asp-controller="Department" asp-action="DepartmentUpdate" asp-route-id="@vm.DeptNo" class="link-underline link-underline-opacity-0"><span class="me-2">[変更]</span></a>
+                                    <button class="manipulation-button delete-button" id="delete-@(vm.DeptNo)" onclick="deleteData(this)"><span id="link-color">[削除]</span></button>
+                                </div>
+                            </td>
+                        </tr>
+                        i++;
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="modal" id="my-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">部署削除</h5>
+                        <button type="button" class="btn-close modal-cancel-btn" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>本当に削除してもいいですか？</p>
+                    </div>
+                    <div class="modal-footer">
+                        <form asp-area="" asp-controller="Department" asp-action="DepartmentList" method="post">
+                            <button type="button" class="btn btn-secondary modal-cancel-btn" data-bs-dismiss="modal">キャンセル</button>
+                            <button type="submit" class="btn btn-primary modal-cancel-btn">削除</button>
+                            <input name="id" type="hidden" value="" id="hidden-input-for-sending-id" readonly> @*削除対象を指定するための隠しinput*@
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@section Scripts{
+    <script src="/js/DeleteControll.js" asp-append-version="true"></script>
+}

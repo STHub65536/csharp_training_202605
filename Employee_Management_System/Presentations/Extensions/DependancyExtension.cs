@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Repositories;
+using Employee_Management_System.Applications.Services;
+using Employee_Management_System.Applications.Services.Impls;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
 using Employee_Management_System.Infrastructures.Repositories;
@@ -40,9 +42,9 @@ public static class DependancyExtension
 
     private static void SettingApplications(IServiceCollection services)
     {
-        // services.AddScoped<IDepartmentService, DepartmentService>();
-        // services.AddScoped<IEmployeeService, EmployeeService>();
-        // services.AddScoped<IAdminService, AdminService>();
+        services.AddScoped<IDepartmentService, DepartmentService>();
+        services.AddScoped<IEmployeeService, EmployeeService>();
+        services.AddScoped<IAdminService, AdminService>();
     }
 
     private static void SettingPresentations(IServiceCollection services)

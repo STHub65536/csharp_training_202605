@@ -1,8 +1,20 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@{
+    ViewData["Title"] = "社員管理システム";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div d-flex align-items-center>
+    <form asp-area="" asp-controller="Employee" asp-action="EmployeeList" method="get">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-primary" type="submit" id="top-button">社員一覧</button>
+        </div>
+    </form>
+    <form asp-area="" asp-controller="Department" asp-action="DepartmentList" method="get">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-primary" type="submit">部署一覧</button>
+        </div>
+    </form>
+    <form asp-area="" asp-controller="Admin" asp-action="AdminRegister" method="get">
+        <div class="d-grid gap-2 col-6 mx-auto">
+            <button class="btn btn-primary" type="submit">管理者一覧</button>
+        </div>
+    </form>
 </div>
