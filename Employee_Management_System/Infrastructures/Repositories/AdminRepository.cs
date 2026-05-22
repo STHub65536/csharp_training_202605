@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Applications.Repositories;
+using Employee_Management_System.Exceptions;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
 using Employee_Management_System.Infrastructures.Entities;
@@ -23,45 +24,80 @@ public class AdminRepository : IAdminRepository
     
     public List<Admin> FindAll()
     {
-        List<Admin> domainList = _context.Admins.Select(a => _adapter.Restore(a))
-                                                .OrderBy(a => a.UserId)
-                                                .ToList();
+        try
+        {
+            List<Admin> domainList = _context.Admins.Select(a => _adapter.Restore(a))
+                                                    .OrderBy(a => a.UserId)
+                                                    .ToList();
 
-        return domainList;
+            return domainList;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("すべての管理者を取得できませんでした。",e);
+        }
     }
 
     public Admin? FindById(string id)
     {
-        AdminEntity? entity = _context.Admins.Find(id);
+        try
+        {
+            AdminEntity? entity = _context.Admins.Find(id);
 
-        return entity != null? _adapter.Restore(entity) : null;
+            return entity != null? _adapter.Restore(entity) : null;
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した管理者を取得できませんでした。",e);
+        }
     }
 
     public void Add(Admin domain)
     {
-        AdminEntity entity = _adapter.Convert(domain);
-        _context.Admins.Add(entity);
+        try
+        {
+            AdminEntity entity = _adapter.Convert(domain);
+            _context.Admins.Add(entity);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("管理者を取得できませんでした。",e);
+        }
     }
 
     public void UpdateById(string id, Admin domain)
     {
-        AdminEntity targetEntity = _context.Admins.Find(id)!;
-        AdminEntity updateEntity = _adapter.Convert(domain);
+        try
+        {
+            AdminEntity targetEntity = _context.Admins.Find(id)!;
+            AdminEntity updateEntity = _adapter.Convert(domain);
 
-        targetEntity.UserId = updateEntity.UserId;
-        targetEntity.UserName = updateEntity.UserName;
+            targetEntity.UserId = updateEntity.UserId;
+            targetEntity.UserName = updateEntity.UserName;
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した管理者を更新できませんでした。",e);
+        }
     }
 
     public void DeleteById(string id)
     {
-        AdminEntity entity = _context.Admins.Find(id)!;
-        
-        _context.Admins.Remove(entity);
+        try
+        {
+            AdminEntity entity = _context.Admins.Find(id)!;
+            
+            _context.Admins.Remove(entity);
 
-        _context.SaveChanges();
+            _context.SaveChanges();
+        }
+        catch(Exception e)
+        {
+            throw new InternalException("指定した管理者を削除できませんでした。",e);
+        }
     }
 }

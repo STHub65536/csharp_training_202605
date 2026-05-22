@@ -10,6 +10,6 @@ public interface IAdminService
     List<Admin> GetAdminList();
     void AddAdmin(Admin domain);
     bool IsUserAuthenticated(Admin domain);
-    bool UpdateAdmin(int id, Admin admin);
+    void UpdateAdmin(string id, Admin domain);
     void DeleteAdmin(string id);
 }

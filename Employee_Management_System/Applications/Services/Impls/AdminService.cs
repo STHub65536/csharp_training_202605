@@ -23,21 +23,38 @@ public class AdminService : IAdminService
 
     public bool IsUserAuthenticated(Admin domain)
     {
-        throw new NotImplementedException();
+        Admin? target = _repository.FindById(domain.UserId);
+        if(target == null)
+        {
+            return false;
+        }
+        else
+        {
+            return target.UserName == domain.UserName? true : false;
+        }
     }
 
     public void AddAdmin(Admin domain)
     {
-        throw new NotImplementedException();
+        if(_repository.FindById(domain.UserId) != null)
+        {
+            _repository.Add(domain);
+        }
     }
 
-    public bool UpdateAdmin(int id, Admin admin)
+    public void UpdateAdmin(string id, Admin domain)
     {
-        throw new NotImplementedException();
+        if(_repository.FindById(domain.UserId) != null)
+        {
+            _repository.UpdateById(id, domain);
+        }
     }
 
     public void DeleteAdmin(string id)
     {
-        throw new NotImplementedException();
+        if(_repository.FindById(id) != null)
+        {
+            _repository.DeleteById(id);
+        }
     }
 }
