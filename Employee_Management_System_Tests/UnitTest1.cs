@@ -1,4 +1,4 @@
-namespace tests;
+namespace Employee_Management_System_Tests;
 
 [TestClass]
 public class UnitTest1
