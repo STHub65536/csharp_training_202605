@@ -14,7 +14,7 @@ public class Employee
     public int? DeptNo { get; }
     public Department? Dept { get; }
 
-    public static readonly int MAX_AGE = 100;
+    public static readonly int MAX_AGE = 80;
     public static readonly int MIN_AGE = 15;
 
     public Employee(int? EmpNo, string EmpName, DateOnly Birthday, string MailAddress, int? DeptNo, Department? Dept)
