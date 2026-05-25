@@ -26,17 +26,18 @@ public class EmployeeViewModelAdapter : IConverter<Employee, EmployeeViewModel>,
     public Employee Restore(EmployeeViewModel target)
     {
         int? deptNo = 0;
-        if(target.ChangedDeptNo == 0)
+        int? changedDeptNo = target.ChangedDeptNo;
+        if(changedDeptNo == 0)
         {
-            target.ChangedDeptNo = null;
+            changedDeptNo = null;
         }
-        if(target.ChangedDeptNo == target.DeptNo)
+        if(changedDeptNo == target.DeptNo)
         {
             deptNo = target.DeptNo;
         }
         else
         {
-            deptNo = target.ChangedDeptNo;
+            deptNo = changedDeptNo;
         }
         return new Employee(
             EmpNo: target.EmpNo,

@@ -21,7 +21,7 @@ public class DepartmentViewModelAdapter : IConverter<Department, DepartmentViewM
     public Department Restore(DepartmentViewModel target)
     {
         return new Department(
-            DeptNo: target.DeptNo,
+            DeptNo: (int)target.DeptNo!, //画面の都合でViewModelの部署番号をNullableにしているが、送信時は必須チェック済み
             DeptName: target.DeptName
         );
     }
