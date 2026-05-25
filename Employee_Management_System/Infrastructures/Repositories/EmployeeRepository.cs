@@ -27,15 +27,11 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            List<EmployeeEntity> entityList = _context.Employees.Include(e => e.Dept)
+            List<Employee> domainList = _context.Employees.Include(e => e.Dept)
                                                                 .OrderBy(e => e.EmpNo)
+                                                                .ToList()
+                                                                .Select(e => _adapter.Restore(e))
                                                                 .ToList();
-            List<Employee> domainList = new List<Employee>();
-            foreach(EmployeeEntity e in entityList)
-            {
-                domainList.Add(_adapter.Restore(e));
-            }
-
             return domainList;
         }
         catch(Exception e)
@@ -49,7 +45,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            EmployeeEntity? entity = _context.Employees.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            EmployeeEntity? entity = _context.Employees.Where(d => d.EmpNo == number).FirstOrDefault()!;
             
             return entity != null ? _adapter.Restore(entity) : null;
         }
@@ -93,7 +89,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            EmployeeEntity targetEntity = _context.Employees.Where(d => d.DeptNo == domain.EmpNo).FirstOrDefault()!;
+            EmployeeEntity targetEntity = _context.Employees.Where(d => d.EmpNo == domain.EmpNo).FirstOrDefault()!;
             EmployeeEntity updateEntity = _adapter.Convert(domain);
 
             targetEntity.EmpName = updateEntity.EmpName;
@@ -113,7 +109,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            EmployeeEntity? entity = _context.Employees.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            EmployeeEntity? entity = _context.Employees.Where(d => d.EmpNo == number).FirstOrDefault()!;
             _context.Employees.Remove(entity);
 
             _context.SaveChanges();

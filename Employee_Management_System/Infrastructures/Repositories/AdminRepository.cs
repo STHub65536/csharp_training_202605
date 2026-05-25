@@ -26,8 +26,8 @@ public class AdminRepository : IAdminRepository
     {
         try
         {
-            List<Admin> domainList = _context.Admins.Select(a => _adapter.Restore(a))
-                                                    .OrderBy(a => a.UserId)
+            List<Admin> domainList = _context.Admins.ToList()
+                                                    .Select(d => _adapter.Restore(d))
                                                     .ToList();
 
             return domainList;
@@ -42,7 +42,7 @@ public class AdminRepository : IAdminRepository
     {
         try
         {
-            AdminEntity? entity = _context.Admins.Find(id);
+            AdminEntity? entity = _context.Admins.Where(d => d.UserId == id).FirstOrDefault()!;
 
             return entity != null? _adapter.Restore(entity) : null;
         }
@@ -71,7 +71,7 @@ public class AdminRepository : IAdminRepository
     {
         try
         {
-            AdminEntity targetEntity = _context.Admins.Find(id)!;
+            AdminEntity targetEntity = _context.Admins.Where(d => d.UserId == id).FirstOrDefault()!;
             AdminEntity updateEntity = _adapter.Convert(domain);
 
             targetEntity.UserId = updateEntity.UserId;
@@ -89,7 +89,7 @@ public class AdminRepository : IAdminRepository
     {
         try
         {
-            AdminEntity entity = _context.Admins.Find(id)!;
+            AdminEntity entity = _context.Admins.Where(d => d.UserId == id).FirstOrDefault()!;
             
             _context.Admins.Remove(entity);
 
