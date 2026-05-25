@@ -1,0 +1,51 @@
+@model EmployeeViewModel
+@* isRegister:送信ボタンなら1、戻るボタンなら0を追加で送信 *@
+@{
+    string deptName = (string)TempData["DeptName"];
+}
+<h3 class="text-center">登録情報確認</h3>
+<table class="table table-bordered border-dark border-2 w-50 mx-auto">
+    <tbody>
+        <tr>
+            <th class="table-secondary">社員名</th>
+            <td>@Model.EmpName</td>
+        </tr>
+        <tr>
+            <th class="table-secondary">生年月日</th>
+            <td>@Model.Birthday
+            </td>
+        </tr>
+        <tr>
+            <th class="table-secondary">メールアドレス</th>
+            <td>@Model.MailAddress
+            </td>
+        </tr>
+        <tr>
+            <th class="table-secondary">所属部署名</th>
+            <td>@deptName
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <form asp-area="" asp-controller="Employee" asp-action="Check" method="post">
+        <input type="hidden" asp-for="EmpName" class="form-control" value="@Model.EmpName" readonly>
+        <input type="hidden" asp-for="Birthday" class="form-control" value="@Model.Birthday" readonly>
+        <input type="hidden" asp-for="MailAddress" class="form-control" value="@Model.MailAddress" readonly>
+        <input type="hidden" asp-for="ChangedDeptNo" class="form-control" value="@Model.ChangedDeptNo" readonly>
+        
+        <input type="hidden" name="isRegister" class="form-control" value="1" readonly>
+
+        <button type="submit" class="btn btn-primary me-2">送信</button>
+    </form>
+    <form asp-area="" asp-controller="Employee" asp-action="Check" method="post">
+        <input type="hidden" asp-for="EmpName" class="form-control" value="@Model.EmpName" readonly>
+        <input type="hidden" asp-for="Birthday" class="form-control" value="@Model.Birthday" readonly>
+        <input type="hidden" asp-for="MailAddress" class="form-control" value="@Model.MailAddress" readonly>
+        <input type="hidden" asp-for="ChangedDeptNo" class="form-control" value="@Model.ChangedDeptNo" readonly>
+
+        <input type="hidden" name="isRegister" class="form-control" value="0" readonly>
+
+        <button type="submit" class="btn btn-secondary">戻る</button>
+    </form>
+</div>
