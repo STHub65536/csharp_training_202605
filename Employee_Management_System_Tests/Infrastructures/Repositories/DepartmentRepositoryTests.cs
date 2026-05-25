@@ -108,7 +108,7 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenNumberIsIncorrect()
     {
-        var department = new Department(1000, "検証部"); //4桁(最大3桁)
+        var department = new Department(1000, "検証部"); // 部署番号:4桁(最大3桁)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
         Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
@@ -117,7 +117,7 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenNameIsIncorrect()
     {
-        var department = new Department(110, "ああああああああああああああああああああ部"); // 21文字(20文字制限)
+        var department = new Department(110, "ああああああああああああああああああああ部"); // 部署名:21文字(最大20文字)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
         Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
