@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Applications.Services;
@@ -25,24 +26,40 @@ public class DepartmentController : Controller
     [HttpGet("List")]
     public IActionResult DepartmentList()
     {
-        List<Department> domainList = _service.GetDepartmentList();
-        //domainList.ForEach(d => Console.WriteLine("fffff"+d.DeptName));
-        
-        List<DepartmentViewModel> vmList = domainList.Select(d => _adapter.Convert(d)).ToList();
+        List<DepartmentViewModel> vmList = _service.GetDepartmentList().Select(d => _adapter.Convert(d)).ToList();
         return View(vmList);
     }
 
     [HttpPost("List")]
-    public IActionResult DepartmentList(int id)
+    public IActionResult DepartmentList(int deptNo)
     {
-        _service.DeleteDepartment(id);
-        return RedirectToAction();
+        if (!_service.HasEmployees(deptNo))
+        {
+            _service.DeleteDepartment(deptNo);
+            return RedirectToAction();
+        }
+        else
+        {
+            ViewData["DeleteError"] = $"{_service.FindDepartment(deptNo)!.DeptName}には社員が所属しているため削除できません";
+            
+            List<DepartmentViewModel> vmList = _service.GetDepartmentList().Select(d => _adapter.Convert(d)).ToList();
+            return View(vmList);
+        }
     }
 
     [HttpGet("Register")]
     public IActionResult DepartmentRegister()
     {
-        return View();
+        string? json = (string?)TempData["InitializeForm"];
+        DepartmentViewModel vm;
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            vm = new DepartmentViewModel();
+            return View(vm);
+        }
+        vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
+
+        return View(vm);
     }
 
     [HttpPost("Register")]
@@ -50,39 +67,72 @@ public class DepartmentController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View("DepartmentRegister", vm);
-        }
-        
-        Department domain = _adapter.Restore(vm);
-        
-        if(_service.FindDepartment((int)vm.DeptNo!) != null) // ViewModelでのバリデーションでvm.DeptNoの非nullはチェック済み
-        {
-            ViewData["ExistingNoError"] = "この部署番号は既に使用されています";
-            return View("DepartmentRegister", vm);
+            return View(vm);
         }
 
-        _service.AddDepartment(domain);
-        return RedirectToAction("DepartmentList", "Department");
+        bool isDifferent = _service.IsDepartmentDifferent(_adapter.Restore(vm));
+        if (isDifferent)
+        {
+            TempData["DepartmentForm"]  = JsonSerializer.Serialize(vm);
+
+            return RedirectToAction("Check");
+        }
+        else
+        {
+            ViewData["ExistingError"] = "入力された部署番号または部署名は既に存在しています";
+
+            return View(vm);
+        }
+    }
+
+    [HttpGet("Confirm")]
+    public IActionResult Check()
+    {
+        string? json = (string?)TempData["DepartmentForm"];
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return RedirectToAction("DepartmentRegister");
+        }
+        DepartmentViewModel vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
+        return View(vm);
+    }
+
+    [HttpPost("Confirm")]
+    public IActionResult Check(DepartmentViewModel vm, int isRegister)
+    {
+        if(isRegister == 1)
+        {
+            Department domain = _adapter.Restore(vm);
+            _service.AddDepartment(domain);
+
+            return RedirectToAction("DepartmentList");
+        }
+        else
+        {
+            TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+            
+            return RedirectToAction("DepartmentRegister");
+        }
     }
 
     [HttpGet("Update")]
-    public IActionResult DepartmentUpdate([FromQuery] int id)
+    public IActionResult DepartmentUpdate([FromQuery] int number)
     {
-        Department domain = _service.FindDepartment(id)!;
+        Department domain = _service.FindDepartment(number)!;
         DepartmentViewModel vm = _adapter.Convert(domain);
 
         return View(vm);
     }
 
     [HttpPost("Update")]
-    public IActionResult DepartmentUpdate(int id, DepartmentViewModel vm)
+    public IActionResult DepartmentUpdate(int number, DepartmentViewModel vm)
     {
         if (!ModelState.IsValid)
         {
             return View("DepartmentUpdate", vm);
         }
         Department domain = _adapter.Restore(vm);
-        _service.UpdateDepartment(id, domain);
+        _service.UpdateDepartment(number, domain);
 
         return RedirectToAction("DepartmentList", "Department");
     }
