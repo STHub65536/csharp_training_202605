@@ -38,7 +38,6 @@ public class EmployeeRepository : IEmployeeRepository
         {
             throw new InternalException("すべての社員を取得できませんでした。",e);
         }
-        
     }
 
     public Employee? FindByNumber(int number)

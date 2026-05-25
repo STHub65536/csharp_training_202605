@@ -30,17 +30,19 @@ public class DepartmentRepositoryTests
             .Options;
 
         _context = new AppDbContext(options);
-
-        var path = Path.Combine(AppContext.BaseDirectory, "sql", "init.sql");
-        var sql = File.ReadAllText(path);
-        _context.Database.ExecuteSqlRaw(sql);
-
-        _repository = new DepartmentRepository(_context, adapter);
     }
 
     [TestMethod]
     public void FindAll_ReturnsAllDepartments()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+        
         var lists = _repository.FindAll();
 
         AreEqual(101, lists[0].DeptNo);
@@ -56,8 +58,32 @@ public class DepartmentRepositoryTests
     }
 
     [TestMethod]
+    public void FindAll_ReturnsEmptyList()
+    {
+        var adapter = new DepartmentEntityAdapter();
+
+        var emptyPath = Path.Combine(AppContext.BaseDirectory, "sql", "departmentEmptyInit.sql");
+        var emptySql = File.ReadAllText(emptyPath);
+        _context.Database.ExecuteSqlRaw(emptySql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
+        var lists = _repository.FindAll();
+
+        Assert.IsTrue(lists.Count() == 0);
+    }
+
+    [TestMethod]
     public void FindByNumber_WhenNumberCorrect()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var actual = _repository.FindByNumber(101);
 
         IsNotNull(actual);
@@ -68,6 +94,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void FindByNumber_WhenNumberNotFound()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var actual = _repository.FindByNumber(999);
         IsNull(actual);
     }
@@ -75,6 +109,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void HasSameDeptName_WhenNameExists()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var actual = _repository.HasSameDeptName("総務部");
         IsTrue(actual);
     }
@@ -82,6 +124,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void HasSameDeptName_WhenNameNotExists()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var actual = _repository.HasSameDeptName("情報システム部");
         IsFalse(actual);
     }
@@ -89,6 +139,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenCorrect()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var beforeCount = _context.Departments.Count();
 
         var department = new Department(110, "検証部");
@@ -108,6 +166,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenNumberIsIncorrect()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+
         var department = new Department(1000, "検証部"); // 部署番号:4桁(最大3桁)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
@@ -117,6 +183,14 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenNameIsIncorrect()
     {
+        var adapter = new DepartmentEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new DepartmentRepository(_context, adapter);
+        
         var department = new Department(110, "ああああああああああああああああああああ部"); // 部署名:21文字(最大20文字)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));

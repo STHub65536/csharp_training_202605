@@ -33,16 +33,24 @@ public class EmployeeRepositoryTests
 
         _context = new AppDbContext(options);
 
-        var path = Path.Combine(AppContext.BaseDirectory, "sql", "init.sql");
-        var sql = File.ReadAllText(path);
-        _context.Database.ExecuteSqlRaw(sql);
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
 
         _repository = new EmployeeRepository(_context, adapter);
     }
 
     [TestMethod]
-    public void FindAll_ReturnsAllDepartments()
+    public void FindAll_ReturnsAllEmployees()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var lists = _repository.FindAll();
 
         AreEqual(1001, lists[0].EmpNo);
@@ -83,8 +91,32 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
+    public void FindAll_ReturnsEmptyList()
+    {
+        var adapter = new EmployeeEntityAdapter();
+        
+        var emptyPath = Path.Combine(AppContext.BaseDirectory, "sql", "employeeEmptyInit.sql");
+        var emptySql = File.ReadAllText(emptyPath);
+        _context.Database.ExecuteSqlRaw(emptySql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
+        var lists = _repository.FindAll();
+
+        Assert.IsTrue(lists.Count() == 0);
+    }
+
+    [TestMethod]
     public void FindByNumber_WhenNumberCorrect()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var actual = _repository.FindByNumber(1);
 
         IsNotNull(actual);
@@ -98,6 +130,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void FindByNumber_WhenNumberNotFound()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var actual = _repository.FindByNumber(1100);
         IsNull(actual);
     }
@@ -105,6 +145,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void HasSameMailAddress_WhenMailAddressExists()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var actual = _repository.HasSameMailAddress("foo89732@ezweb.ne.jp");
         IsTrue(actual);
     }
@@ -112,6 +160,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void HasSameMailAddress_WhenMailAddressNotExists()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var actual = _repository.HasSameMailAddress("hogehoge@example.com");
         IsFalse(actual);
     }
@@ -119,6 +175,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void Add_WhenCorrect()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var beforeCount = _context.Employees.Count();
 
         var employee = new Employee("斎藤康太", new DateOnly(2013, 5, 1), "foofoo@ezweb.ne.jp", 104);
@@ -141,6 +205,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void Add_WhenNameIsIncorrect()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var employee = new Employee("あああああああああああああああああああああ", new DateOnly(2000,1,1), "foo@gmail.com", 101); // 社員名:21文字(最大20文字)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));
@@ -150,6 +222,14 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void Add_WhenMailAddressIsIncorrect()
     {
+        var adapter = new EmployeeEntityAdapter();
+
+        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
+        var normalSql = File.ReadAllText(normalPath);
+        _context.Database.ExecuteSqlRaw(normalSql);
+
+        _repository = new EmployeeRepository(_context, adapter);
+
         var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "abcdefghijklmnopqrstuvwxyz123456789123456@gmail.com", null); // メールアドレス:51文字(50文字制限)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));

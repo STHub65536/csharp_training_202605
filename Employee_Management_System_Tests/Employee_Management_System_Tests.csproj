@@ -22,7 +22,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="sql\init.sql">
+    <None Include="sql\normalInit.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="sql\departmentEmptyInit.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="sql\employeeEmptyInit.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
