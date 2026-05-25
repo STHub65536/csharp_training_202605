@@ -24,7 +24,7 @@ public class EmployeeViewModel
 
     [Display(Name = "メールアドレス")]
     [Required(ErrorMessage = "{0}は入力必須です")]
-    [RegularExpression(@"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")]
+    [EmailAddress(ErrorMessage = "正しい形式で入力して下さい")]
     public string MailAddress { get; set; } = "";
 
     public int? DeptNo { get; set; }
