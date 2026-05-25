@@ -1,0 +1,38 @@
+@model DepartmentViewModel
+@* isRegister:送信ボタンなら1、戻るボタンなら0を追加で送信 *@
+<h3 class="text-center">更新情報確認</h3>
+<table class="table table-bordered border-dark border-2 w-50 mx-auto">
+    <tbody>
+        <tr>
+            <th class="table-secondary">部署番号</th>
+            <td>@Model.DeptNo</td>
+        </tr>
+        <tr>
+            <th class="table-secondary">部署名</th>
+            <td>@Model.DeptName
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div class="d-flex justify-content-center">
+    <form asp-area="" asp-controller="Department" asp-action="UpdateCheck" method="post">
+        <input type="hidden" name="number" class="form-control" value="@TempData["OriginNumber"]" readonly>
+
+        <input type="hidden" asp-for="DeptNo" class="form-control" value="@Model.DeptNo" readonly>
+        <input type="hidden" asp-for="DeptName" class="form-control" value="@Model.DeptName" readonly>
+        
+        <input type="hidden" name="isRegister" class="form-control" value="1" readonly>
+
+        <button type="submit" class="btn btn-primary me-2">送信</button>
+    </form>
+    <form asp-area="" asp-controller="Department" asp-action="UpdateCheck" method="post">
+        <input type="hidden" name="number" class="form-control" value="@TempData["OriginNumber"]" readonly>
+
+        <input type="hidden" asp-for="DeptNo" class="form-control" value="@Model.DeptNo" readonly>
+        <input type="hidden" asp-for="DeptName" class="form-control" value="@Model.DeptName" readonly>
+
+        <input type="hidden" name="isRegister" class="form-control" value="0" readonly>
+
+        <button type="submit" class="btn btn-secondary">戻る</button>
+    </form>
+</div>

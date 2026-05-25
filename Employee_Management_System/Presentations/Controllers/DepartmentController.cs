@@ -116,10 +116,24 @@ public class DepartmentController : Controller
     }
 
     [HttpGet("Update")]
-    public IActionResult DepartmentUpdate([FromQuery] int number)
+    public IActionResult DepartmentUpdate(int number)
     {
-        Department domain = _service.FindDepartment(number)!;
-        DepartmentViewModel vm = _adapter.Convert(domain);
+        string? json = (string?)TempData["InitializeForm"];
+        if(TempData["OriginNumber"] != null)
+        {
+            ViewData["Number"] = TempData["OriginNumber"];
+        }
+        else
+        {
+            ViewData["Number"] = number;
+        }
+        DepartmentViewModel vm;
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            vm = _adapter.Convert(_service.FindDepartment(number)!);
+            return View(vm);
+        }
+        vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
 
         return View(vm);
     }
@@ -131,9 +145,51 @@ public class DepartmentController : Controller
         {
             return View("DepartmentUpdate", vm);
         }
-        Department domain = _adapter.Restore(vm);
-        _service.UpdateDepartment(number, domain);
 
-        return RedirectToAction("DepartmentList", "Department");
+        bool isDifferent = _service.IsDepartmentDifferent(_adapter.Restore(vm));
+        if (isDifferent)
+        {
+            TempData["DepartmentUpdateForm"] = JsonSerializer.Serialize(vm);
+            TempData["OriginNumber"] = number;
+
+            return RedirectToAction("UpdateCheck");
+        }
+        else
+        {
+            ViewData["ExistingError"] = "入力された部署番号または部署名は既に存在しています";
+
+            return View(vm);
+        }
+    }
+
+    [HttpGet("Update/Confirm")]
+    public IActionResult UpdateCheck()
+    {
+        string? json = (string?)TempData["DepartmentUpdateForm"];
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            return RedirectToAction("DepartmentRegister");
+        }
+        DepartmentViewModel vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
+        return View(vm);
+    }
+
+    [HttpPost("Update/Confirm")]
+    public IActionResult UpdateCheck(int number, DepartmentViewModel vm, int isRegister)
+    {
+        if(isRegister == 1)
+        {
+            Department domain = _adapter.Restore(vm);
+            _service.UpdateDepartment(number, domain);
+
+            return RedirectToAction("DepartmentList");
+        }
+        else
+        {
+            TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+            TempData["OriginNumber"] = number;
+            
+            return RedirectToAction("DepartmentUpdate");
+        }
     }
 }
