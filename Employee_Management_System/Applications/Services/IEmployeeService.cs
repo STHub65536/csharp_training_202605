@@ -8,6 +8,8 @@ namespace Employee_Management_System.Applications.Services;
 public interface IEmployeeService
 {
     List<Employee> GetEmployeeList();
+    Employee? FindEmployee(int number);
+    bool IsEmployeeDifferent(Employee domain);
     void AddEmployee(Employee domain);
     void UpdateEmployee(Employee domain);
     void DeleteEmployee(int number);

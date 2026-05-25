@@ -11,40 +11,47 @@ namespace Employee_Management_System.Applications.Services.Impls;
 
 public class DepartmentService : IDepartmentService
 {
-    private IDepartmentRepository _repository;
+    private IDepartmentRepository _departmentRepository;
+    private IEmployeeRepository _employeeRepository;
 
-    public DepartmentService(IDepartmentRepository repository)
+    public DepartmentService(IDepartmentRepository departmentRepository, IEmployeeRepository employeeRepository)
     {
-        _repository = repository;
+        _departmentRepository = departmentRepository;
+        _employeeRepository = employeeRepository;
     }
 
     public List<Department> GetDepartmentList()
     {
-        return _repository.FindAll();
+        return _departmentRepository.FindAll();
     }
 
     public Department? FindDepartment(int number)
     {
-        return _repository.FindByNumber(number);
+        return _departmentRepository.FindByNumber(number);
+    }
+
+    public bool IsDepartmentDifferent(Department domain)
+    {
+        return _departmentRepository.FindByNumber(domain.DeptNo) == null && !_departmentRepository.HasSameDeptName(domain.DeptName);
     }
 
     public void AddDepartment(Department domain)
     {
-        if(_repository.FindByNumber(domain.DeptNo) == null && !_repository.HasSameDeptName(domain.DeptName))
+        if(_departmentRepository.FindByNumber(domain.DeptNo) == null && !_departmentRepository.HasSameDeptName(domain.DeptName))
         {
-            _repository.Add(domain);
+            _departmentRepository.Add(domain);
         }
     }
 
     public void UpdateDepartment(int no, Department domain)
     {
         //更新先の値に重複しているものがないか
-        if(_repository.FindByNumber(domain.DeptNo) == null && !_repository.HasSameDeptName(domain.DeptName))
+        if(_departmentRepository.FindByNumber(domain.DeptNo) == null && !_departmentRepository.HasSameDeptName(domain.DeptName))
         {
             //元の部署番号(no)が存在するか
-            if(_repository.FindByNumber(no) != null)
+            if(_departmentRepository.FindByNumber(no) != null)
             {
-                _repository.UpdateByNumber(no, domain);   
+                _departmentRepository.UpdateByNumber(no, domain);   
             }
         }
     }
@@ -52,9 +59,16 @@ public class DepartmentService : IDepartmentService
     public void DeleteDepartment(int no)
     {
         //元の部署番号(no)が存在するか
-        if(_repository.FindByNumber(no) != null)
+        if(_departmentRepository.FindByNumber(no) != null)
         {
-            _repository.DeleteByNumber(no);   
+            _departmentRepository.DeleteByNumber(no);   
         }
+    }
+
+    public bool HasEmployees(int no)
+    {
+        List<Employee> domainList = _employeeRepository.FindAll();
+        
+        return domainList.Where(d => d.DeptNo == no).Count() >= 1;
     }
 }

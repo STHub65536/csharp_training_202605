@@ -21,10 +21,21 @@ public class EmployeeService : IEmployeeService
         return _repository.FindAll();
     }
 
+    public Employee? FindEmployee(int number)
+    {
+        return _repository.FindByNumber(number);
+    }
+
+    public bool IsEmployeeDifferent(Employee domain)
+    {
+        return !_repository.HasSameMailAddress(domain.MailAddress);
+    }
+
     public void AddEmployee(Employee domain)
     {
         if(!_repository.HasSameMailAddress(domain.MailAddress))
         {
+            
             _repository.Add(domain);
         }
     }
@@ -36,6 +47,6 @@ public class EmployeeService : IEmployeeService
 
     public void DeleteEmployee(int number)
     {
-        _repository.DeleteByNumber(number);
+        _repository.DeleteByNumber(number - 1000);
     }
 }
