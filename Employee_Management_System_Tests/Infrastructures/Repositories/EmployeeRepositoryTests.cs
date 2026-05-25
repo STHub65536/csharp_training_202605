@@ -7,6 +7,7 @@ using Employee_Management_System.Exceptions;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
 using Employee_Management_System.Infrastructures.Repositories;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -81,71 +82,77 @@ public class EmployeeRepositoryTests
         AreEqual(null, lists[5].DeptNo);
     }
 
-    // [TestMethod]
-    // public void FindByNumber_WhenNumberCorrect()
-    // {
-    //     var actual = _repository.FindByNumber(101);
+    [TestMethod]
+    public void FindByNumber_WhenNumberCorrect()
+    {
+        var actual = _repository.FindByNumber(1);
 
-    //     IsNotNull(actual);
-    //     AreEqual(101, actual.DeptNo);
-    //     AreEqual("総務部", actual.DeptName);
-    // }
+        IsNotNull(actual);
+        AreEqual(1001, actual.EmpNo);
+        AreEqual("田中太郎", actual.EmpName);
+        AreEqual("2003-02-05", actual.Birthday.ToString("yyyy-MM-dd"));
+        AreEqual("aaabbbccc1234@gmail.com", actual.MailAddress);
+        AreEqual(101, actual.DeptNo);
+    }
 
-    // [TestMethod]
-    // public void FindByNumber_WhenNumberNotFound()
-    // {
-    //     var actual = _repository.FindByNumber(999);
-    //     IsNull(actual);
-    // }
+    [TestMethod]
+    public void FindByNumber_WhenNumberNotFound()
+    {
+        var actual = _repository.FindByNumber(1100);
+        IsNull(actual);
+    }
 
-    // [TestMethod]
-    // public void HasSameDeptName_WhenNameExists()
-    // {
-    //     var actual = _repository.HasSameDeptName("総務部");
-    //     IsTrue(actual);
-    // }
+    [TestMethod]
+    public void HasSameMailAddress_WhenMailAddressExists()
+    {
+        var actual = _repository.HasSameMailAddress("foo89732@ezweb.ne.jp");
+        IsTrue(actual);
+    }
 
-    // [TestMethod]
-    // public void HasSameDeptName_WhenNameNotExists()
-    // {
-    //     var actual = _repository.HasSameDeptName("情報システム部");
-    //     IsFalse(actual);
-    // }
+    [TestMethod]
+    public void HasSameMailAddress_WhenMailAddressNotExists()
+    {
+        var actual = _repository.HasSameMailAddress("hogehoge@example.com");
+        IsFalse(actual);
+    }
 
-    // [TestMethod]
-    // public void Add_WhenCorrect()
-    // {
-    //     var beforeCount = _context.Departments.Count();
+    [TestMethod]
+    public void Add_WhenCorrect()
+    {
+        var beforeCount = _context.Employees.Count();
 
-    //     var department = new Department(110, "検証部");
+        var employee = new Employee("斎藤康太", new DateOnly(2013, 5, 1), "foofoo@ezweb.ne.jp", 104);
 
-    //     _repository.Add(department);
+        _repository.Add(employee);
 
-    //     var afterCount = _context.Departments.Count();
-    //     AreEqual(beforeCount + 1, afterCount);
+        var afterCount = _context.Employees.Count();
+        AreEqual(beforeCount + 1, afterCount);
 
-    //     var created = _context.Departments
-    //         .FirstOrDefault(i => i.DeptNo == 110);
+        var created = _context.Employees
+            .FirstOrDefault(i => i.MailAddress == "foofoo@ezweb.ne.jp");
 
-    //     IsNotNull(created);
-    //     AreEqual("検証部", created.DeptName);
-    // }
+        IsNotNull(created);
+        AreEqual("斎藤康太", created.EmpName);
+        AreEqual("2013-05-01", created.Birthday.ToString("yyyy-MM-dd"));
+        AreEqual("foofoo@ezweb.ne.jp", created.MailAddress);
+        AreEqual(104, created.DeptNo);
+    }
 
-    // [TestMethod]
-    // public void Add_WhenNumberIsIncorrect()
-    // {
-    //     var department = new Department(1000, "検証部"); //4桁(最大3桁)
+    [TestMethod]
+    public void Add_WhenNameIsIncorrect()
+    {
+        var employee = new Employee("あああああああああああああああああああああ", new DateOnly(2000,1,1), "foo@gmail.com", 101); // 社員名:21文字(最大20文字)
 
-    //     var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
-    //     Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
-    // }
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));
+        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+    }
 
-    // [TestMethod]
-    // public void Add_WhenNameIsIncorrect()
-    // {
-    //     var department = new Department(110, "ああああああああああああああああああああ部"); // 21文字(20文字制限)
+    [TestMethod]
+    public void Add_WhenMailAddressIsIncorrect()
+    {
+        var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "abcdefghijklmnopqrstuvwxyz123456789123456@gmail.com", null); // メールアドレス:51文字(50文字制限)
 
-    //     var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
-    //     Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
-    // }
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));
+        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+    }
 }
