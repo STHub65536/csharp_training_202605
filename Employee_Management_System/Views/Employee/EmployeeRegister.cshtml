@@ -4,17 +4,17 @@
 <h3>新規社員登録</h3>
 <form asp-controller="Employee" asp-action="EmployeeRegister" method="post">
     <label asp-for="EmpName" class="form-label">社員名</label>
-    <div><input type="text" asp-for="EmpName" class="form-control"></div>
+    <div><input type="text" asp-for="EmpName" class="form-control w-50"></div>
     <div>
         <span asp-validation-for="EmpName" class="text-danger"></span>
     </div>
     <label asp-for="Birthday" class="form-label">生年月日</label>
-    <div><input type="date" asp-for="Birthday" class="form-control"></div>
+    <div><input type="date" asp-for="Birthday" class="form-control w-50"></div>
     <div>
         <span class="text-danger">@ViewData["AgeError"]</span>
     </div>
     <label asp-for="MailAddress" class="form-label">メールアドレス</label>
-    <div><input type="text" asp-for="MailAddress" class="form-control"></div>
+    <div><input type="text" asp-for="MailAddress" class="form-control w-50"></div>
     <div>
         <span asp-validation-for="MailAddress" class="text-danger"></span>
     </div>
@@ -22,6 +22,6 @@
         <span class="text-danger">@ViewData["ExistingError"]</span>
     </div>
     <label asp-for="ChangedDeptNo" class="form-label">所属部署</label>
-    <select asp-for="ChangedDeptNo" asp-items="Model.DeptList" class="form-control"></select>
+    <select asp-for="ChangedDeptNo" asp-items="Model.DeptList" class="form-control w-50"></select>
     <button type="submit" class="btn btn-primary mt-3" id="submitButton">確認画面へ</button>
 </form>
