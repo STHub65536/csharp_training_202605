@@ -1,150 +1,125 @@
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 using Employee_Management_System.Applications.Domains;
-using Employee_Management_System.Exceptions;
 using Employee_Management_System.Infrastructures.Adapters;
 using Employee_Management_System.Infrastructures.Context;
-using Employee_Management_System.Infrastructures.Entities;
 using Employee_Management_System.Infrastructures.Repositories;
-using WebApp_Exercise.Tests.TestDoubles;
+using Employee_Management_System.Exceptions;
 
 namespace Employee_Management_System_Tests.Infrastructures.Repositories;
 
+[DoNotParallelize]
 [TestClass]
-public sealed class DepartmentRepositoryTests
+public class DepartmentRepositoryTests
 {
-    [TestMethod]
-    public void FindAll_ReturnsAllCategories()
+    private const string ConnectionString =
+        "Host=localhost;Port=5432;Database=employee_management;Username=postgres;Password=training;";
+
+    private DepartmentRepository _repository = null!;
+    private AppDbContext _context = null!;
+
+    [TestInitialize]
+    public void Setup()
     {
-        using var context = CreateContext(
-        [
-            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
-            new DepartmentEntity { DeptNo = 102, DeptName = "情報システム部" },
-        ]);
-        var repository = CreateRepository(context);
+        var adapter = new DepartmentEntityAdapter();
 
-        var departments = repository.FindAll();
+        var options = new DbContextOptionsBuilder<AppDbContext>()
+            .UseNpgsql(ConnectionString)
+            .Options;
 
-        Assert.AreEqual(2, departments.Count);
-        AssertCategory(departments[0], 101, "総務部");
-        AssertCategory(departments[1], 102, "情報システム部");
+        _context = new AppDbContext(options);
+
+        var path = Path.Combine(AppContext.BaseDirectory, "sql", "init.sql");
+        var sql = File.ReadAllText(path);
+        _context.Database.ExecuteSqlRaw(sql);
+
+        _repository = new DepartmentRepository(_context, adapter);
     }
 
     [TestMethod]
-    public void FindById_WhenCategoryExists_ReturnsCategory()
+    public void FindAll_ReturnsAllDepartments()
     {
-        using var context = CreateContext(
-        [
-            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
-            new DepartmentEntity { DeptNo = 102, DeptName = "情報システム部" },
-        ]);
-        var repository = CreateRepository(context);
+        var lists = _repository.FindAll();
 
-        var department = repository.FindByNumber(102);
-
-        Assert.IsNotNull(department);
-        AssertCategory(department, 102, "情報システム部");
+        AreEqual(101, lists[0].DeptNo);
+        AreEqual("総務部", lists[0].DeptName);
+        AreEqual(102, lists[1].DeptNo);
+        AreEqual("経理部", lists[1].DeptName);
+        AreEqual(103, lists[2].DeptNo);
+        AreEqual("人事部", lists[2].DeptName);
+        AreEqual(104, lists[3].DeptNo);
+        AreEqual("開発部", lists[3].DeptName);
+        AreEqual(105, lists[4].DeptNo);
+        AreEqual("営業部", lists[4].DeptName);
     }
 
     [TestMethod]
-    public void FindById_WhenCategoryDoesNotExist_ReturnsNull()
+    public void FindByNumber_WhenNumberCorrect()
     {
-        using var context = CreateContext(
-        [
-            new DepartmentEntity { DeptNo = 101, DeptName = "総務部" },
-        ]);
-        var repository = CreateRepository(context);
+        var actual = _repository.FindByNumber(101);
 
-        var department = repository.FindByNumber(102);
-
-        Assert.IsNull(department);
+        IsNotNull(actual);
+        AreEqual(101, actual.DeptNo);
+        AreEqual("総務部", actual.DeptName);
     }
 
     [TestMethod]
-    public void FindAll_WhenDbSetThrows_WrapsExceptionInInternalException()
+    public void FindByNumber_WhenNumberNotFound()
     {
-        using var context = CreateContext(new ThrowingDbSet<DepartmentEntity>());
-        var repository = CreateRepository(context);
-
-        var exception = Assert.ThrowsException<InternalException>(() => repository.FindAll());
-
-        Assert.IsInstanceOfType<InvalidOperationException>(exception.InnerException);
+        var actual = _repository.FindByNumber(999);
+        IsNull(actual);
     }
 
     [TestMethod]
-    public void Create_WithItemAndStock_AddsEntitiesAndSavesTwice()
+    public void HasSameDeptName_WhenNameExists()
     {
-        using var context = CreateContext(Array.Empty<DepartmentEntity>());
-        var repository = CreateRepository(context);
-        var item = new Department(101,"総務部");
-        var item2 = new Department(102,"情報システム部");
-        repository.Add(item);
-        repository.Add(item2);
-
-        var savedDepartments = ((QueryableDbSet<DepartmentEntity>)context.Departments).Entities;
-        Assert.AreEqual(2, savedDepartments.Count);
-
-        var savedDepartment = savedDepartments[0];
-        Assert.AreEqual(101, savedDepartment.DeptNo);
-        Assert.AreEqual("総務部", savedDepartment.DeptName);
-
-        var savedDepartment2 = savedDepartments[1];
-        Assert.AreEqual(102, savedDepartment2.DeptNo);
-        Assert.AreEqual("情報システム部", savedDepartment2.DeptName);
-
-        Assert.AreEqual(2, ((TestAppDbContext)context).SaveChangesCallCount);
+        var actual = _repository.HasSameDeptName("総務部");
+        IsTrue(actual);
     }
 
     [TestMethod]
-    public void Create_WhenDbSetThrows_WrapsExceptionInInternalException()
+    public void HasSameDeptName_WhenNameNotExists()
     {
-        using var context = CreateContext(new ThrowingDbSet<DepartmentEntity>());
-        var repository = CreateRepository(context);
-
-        var exception = Assert.ThrowsException<InternalException>(
-            () => repository.Add(new Department(101, "総務部")));
-
-        Assert.IsInstanceOfType<InvalidOperationException>(exception.InnerException);
+        var actual = _repository.HasSameDeptName("情報システム部");
+        IsFalse(actual);
     }
 
-    private static DepartmentRepository CreateRepository(AppDbContext context)
+    [TestMethod]
+    public void Add_WhenCorrect()
     {
-        return new DepartmentRepository(context, new DepartmentEntityAdapter());
+        var beforeCount = _context.Departments.Count();
+
+        var department = new Department(110, "検証部");
+
+        _repository.Add(department);
+
+        var afterCount = _context.Departments.Count();
+        AreEqual(beforeCount + 1, afterCount);
+
+        var created = _context.Departments
+            .FirstOrDefault(i => i.DeptNo == 110);
+
+        IsNotNull(created);
+        AreEqual("検証部", created.DeptName);
     }
 
-    private static AppDbContext CreateContext(IEnumerable<DepartmentEntity> entities)
+    [TestMethod]
+    public void Add_WhenNumberIsIncorrect()
     {
-        return CreateContext(new QueryableDbSet<DepartmentEntity>(entities));
+        var department = new Department(1000, "検証部"); //4桁(最大3桁)
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
+        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
     }
 
-    private static AppDbContext CreateContext(DbSet<DepartmentEntity> departments)
+    [TestMethod]
+    public void Add_WhenNameIsIncorrect()
     {
-        var options = new DbContextOptionsBuilder<AppDbContext>().Options;
-        return new AppDbContext(options)
-        {
-            Departments = departments,
-        };
-    }
+        var department = new Department(110, "ああああああああああああああああああああ部"); // 21文字(20文字制限)
 
-    private static void AssertCategory(Department department, int id, string name)
-    {
-        Assert.AreEqual(id, department.DeptNo);
-        Assert.AreEqual(name, department.DeptName);
-    }
-
-    private static TestAppDbContext CreateContext(QueryableDbSet<DepartmentEntity> departments)
-    {
-        return new TestAppDbContext
-        {
-            Departments = departments,
-        };
-    }
-
-    private static TestAppDbContext CreateContext(ThrowingDbSet<DepartmentEntity> departments)
-    {
-        return new TestAppDbContext
-        {
-            Departments = departments,
-        };
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
+        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
     }
 }
