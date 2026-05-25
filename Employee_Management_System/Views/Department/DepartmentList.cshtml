@@ -37,7 +37,7 @@
                             <td id="DeptName-@(i)">@vm.DeptName</td>
                             <td>
                                 <div class="d-flex">
-                                    <a asp-area="" asp-controller="Department" asp-action="DepartmentUpdate" asp-route-id="@vm.DeptNo" class="text-decoration-none"><span class="me-2">[変更]</span></a>
+                                    <a asp-area="" asp-controller="Department" asp-action="DepartmentUpdate" asp-route-number="@vm.DeptNo" class="text-decoration-none"><span class="me-2">[変更]</span></a>
                                     <button class="manipulation-button delete-button" id="delete-@(vm.DeptNo)" onclick="deleteData(this)"><span id="link-color">[削除]</span></button>
                                 </div>
                             </td>
@@ -59,8 +59,8 @@
                     </div>
                     <div class="modal-footer">
                         <form asp-area="" asp-controller="Department" asp-action="DepartmentList" method="post">
-                            <button type="button" class="btn btn-secondary modal-cancel-btn" data-bs-dismiss="modal">キャンセル</button>
                             <button type="submit" class="btn btn-primary modal-cancel-btn">削除</button>
+                            <button type="button" class="btn btn-secondary modal-cancel-btn" data-bs-dismiss="modal">キャンセル</button>
                             <input name="deptNo" type="hidden" id="hidden-input-for-sending-id" readonly> @*削除対象を指定するための隠しinput*@
                         </form>
                     </div>
