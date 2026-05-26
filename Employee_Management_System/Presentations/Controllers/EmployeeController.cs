@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Employee_Management_System.Presentations.Controllers;
+[Route("Menu/Employee")]
 public class EmployeeController : Controller
 {
     private EmployeeViewModelAdapter _employeeAdapter;
@@ -77,7 +78,7 @@ public class EmployeeController : Controller
             Department? selectedDept = _departmentService.FindDepartment(domain.DeptNo != null? (int)domain.DeptNo : 0);
             TempData["DeptName"] = selectedDept != null? _departmentAdapter.Convert(selectedDept).DeptName : "無所属";
 
-            return RedirectToAction("Check");
+            return RedirectToAction("EmployeeCheck");
         }
         else
         {
@@ -96,7 +97,7 @@ public class EmployeeController : Controller
         }
     }
 
-    [HttpGet("Confirm")]
+    [HttpGet("Register/Confirm")]
     public IActionResult Check()
     {
         string? json = (string?)TempData["EmployeeForm"];
@@ -108,8 +109,8 @@ public class EmployeeController : Controller
         return View(vm);
     }
 
-    [HttpPost("Confirm")]
-    public IActionResult Check(EmployeeViewModel vm, int isRegister)
+    [HttpPost("Register/Confirm")]
+    public IActionResult EmployeeCheck(EmployeeViewModel vm, int isRegister)
     {
         if(isRegister == 1)
         {

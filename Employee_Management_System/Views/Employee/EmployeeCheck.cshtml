@@ -28,7 +28,7 @@
     </tbody>
 </table>
 <div class="d-flex justify-content-center">
-    <form asp-area="" asp-controller="Employee" asp-action="Check" method="post">
+    <form asp-area="" asp-controller="Employee" asp-action="EmployeeCheck" method="post">
         <input type="hidden" asp-for="EmpName" class="form-control" value="@Model.EmpName" readonly>
         <input type="hidden" asp-for="Birthday" class="form-control" value="@Model.Birthday" readonly>
         <input type="hidden" asp-for="MailAddress" class="form-control" value="@Model.MailAddress" readonly>
@@ -38,7 +38,7 @@
 
         <button type="submit" class="btn btn-primary me-2">送信</button>
     </form>
-    <form asp-area="" asp-controller="Employee" asp-action="Check" method="post">
+    <form asp-area="" asp-controller="Employee" asp-action="EmployeeCheck" method="post">
         <input type="hidden" asp-for="EmpName" class="form-control" value="@Model.EmpName" readonly>
         <input type="hidden" asp-for="Birthday" class="form-control" value="@Model.Birthday" readonly>
         <input type="hidden" asp-for="MailAddress" class="form-control" value="@Model.MailAddress" readonly>

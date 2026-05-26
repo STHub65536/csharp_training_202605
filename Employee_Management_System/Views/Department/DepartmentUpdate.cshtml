@@ -5,7 +5,7 @@
 <h5>変更したい項目を書き換えてください</h5>
 
 <form asp-controller="Department" asp-action="DepartmentUpdate" method="post">
-    <input type="hidden" name="number" value="@Model.DeptNo" readonly>
+    <input type="" name="number" value="@ViewData["Number"]" readonly>
     <label asp-for="DeptNo" class="form-label">部署番号</label>
     <div><input type="text" asp-for="DeptNo" class="form-control w-50" placeholder="100～999までの数字で入力"></div>
     <div>
@@ -17,7 +17,7 @@
         <span asp-validation-for="DeptName" class="text-danger"></span>
     </div>
     <div>
-        <span class="text-danger">@ViewData["ExistingError"]</span>
+        <span class="text-danger">@TempData["ExistingError"]</span>
     </div>
     <button type="submit" class="btn btn-primary mt-3" id="submitButton">確認画面へ</button>
 </form>
