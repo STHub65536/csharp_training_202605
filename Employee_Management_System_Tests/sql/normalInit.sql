@@ -9,6 +9,8 @@ INSERT INTO department (dept_no, dept_name) VALUES (102, '経理部');
 INSERT INTO department (dept_no, dept_name) VALUES (103, '人事部');
 INSERT INTO department (dept_no, dept_name) VALUES (104, '開発部');
 INSERT INTO department (dept_no, dept_name) VALUES (105, '営業部');
+INSERT INTO department (dept_no, dept_name) VALUES (106, '情報システム部');
+
 
 INSERT INTO employee (emp_name, birthday, mail_address, dept_no) VALUES ('田中太郎', '2003-02-05', 'aaabbbccc1234@gmail.com', 101);
 INSERT INTO employee (emp_name, birthday, mail_address, dept_no) VALUES ('鈴木三郎', '2002-03-06', 'hoge@example.com', 102);

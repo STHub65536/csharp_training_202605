@@ -30,19 +30,17 @@ public class DepartmentRepositoryTests
             .Options;
 
         _context = new AppDbContext(options);
-    }
-
-    [TestMethod]
-    public void FindAll_ReturnsAllDepartments()
-    {
-        var adapter = new DepartmentEntityAdapter();
-
+        
         var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
         var normalSql = File.ReadAllText(normalPath);
         _context.Database.ExecuteSqlRaw(normalSql);
 
         _repository = new DepartmentRepository(_context, adapter);
-        
+    }
+
+    [TestMethod]
+    public void FindAll_ReturnsAllDepartments()
+    {
         var lists = _repository.FindAll();
 
         AreEqual(101, lists[0].DeptNo);
@@ -74,16 +72,17 @@ public class DepartmentRepositoryTests
     }
 
     [TestMethod]
+    public void FindAll_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.FindAll());
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
     public void FindByNumber_WhenNumberCorrect()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
         var actual = _repository.FindByNumber(101);
 
         IsNotNull(actual);
@@ -94,29 +93,22 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void FindByNumber_WhenNumberNotFound()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
         var actual = _repository.FindByNumber(999);
         IsNull(actual);
     }
 
     [TestMethod]
+    public void FindByNumber_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.FindByNumber(999));
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
     public void HasSameDeptName_WhenNameExists()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
         var actual = _repository.HasSameDeptName("総務部");
         IsTrue(actual);
     }
@@ -124,29 +116,22 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void HasSameDeptName_WhenNameNotExists()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
-        var actual = _repository.HasSameDeptName("情報システム部");
+        var actual = _repository.HasSameDeptName("技術部");
         IsFalse(actual);
+    }
+
+    [TestMethod]
+    public void HasSameDeptName_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.HasSameDeptName("総務部"));
+        Assert.IsInstanceOfType<InternalException>(exception);
     }
 
     [TestMethod]
     public void Add_WhenCorrect()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
         var beforeCount = _context.Departments.Count();
 
         var department = new Department(110, "検証部");
@@ -166,34 +151,54 @@ public class DepartmentRepositoryTests
     [TestMethod]
     public void Add_WhenNumberIsIncorrect()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-
         var department = new Department(1000, "検証部"); // 部署番号:4桁(最大3桁)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
-        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+        Assert.IsInstanceOfType<InternalException>(exception);
     }
 
     [TestMethod]
     public void Add_WhenNameIsIncorrect()
     {
-        var adapter = new DepartmentEntityAdapter();
-
-        var normalPath = Path.Combine(AppContext.BaseDirectory, "sql", "normalInit.sql");
-        var normalSql = File.ReadAllText(normalPath);
-        _context.Database.ExecuteSqlRaw(normalSql);
-
-        _repository = new DepartmentRepository(_context, adapter);
-        
         var department = new Department(110, "ああああああああああああああああああああ部"); // 部署名:21文字(最大20文字)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(department));
-        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
+    public void UpdateNameByNumber_WhenTargetNotNull()
+    {
+        var department = new Department(101, "法務部");
+
+        _repository.UpdateNameByNumber(101, department);
+
+        var result = _repository.FindByNumber(101);
+        Assert.AreEqual("法務部", result.DeptName);
+    }
+
+    [TestMethod]
+    public void UpdateNameByNumber_WhenTargetNull()
+    {
+        Department? department = new Department(110, "法務部");
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.UpdateNameByNumber(0, department));
+        Assert.IsInstanceOfType<InternalException>(exception); 
+    }
+
+    [TestMethod]
+    public void DeleteByNumber_WhenTargetNotNull()
+    {
+        _repository.DeleteByNumber(106);
+
+        var result = _repository.FindByNumber(106);
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void DeleteByNumber_WhenTargetNull()
+    {
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.DeleteByNumber(110));
+        Assert.IsInstanceOfType<InternalException>(exception); 
     }
 }

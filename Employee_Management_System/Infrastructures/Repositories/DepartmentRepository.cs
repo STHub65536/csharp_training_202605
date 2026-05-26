@@ -84,8 +84,8 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            DepartmentEntity targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
-            DepartmentEntity updateEntity = _adapter.Convert(domain);
+            DepartmentEntity? targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            DepartmentEntity? updateEntity = _adapter.Convert(domain);
 
             targetEntity.DeptName = updateEntity.DeptName;
 
@@ -102,7 +102,7 @@ public class DepartmentRepository : IDepartmentRepository
     {
         try
         {
-            DepartmentEntity entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
+            DepartmentEntity? entity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
             
             _context.Departments.Remove(entity);
 
