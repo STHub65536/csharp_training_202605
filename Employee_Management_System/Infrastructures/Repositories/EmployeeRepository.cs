@@ -88,7 +88,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            EmployeeEntity targetEntity = _context.Employees.Where(d => d.EmpNo == domain.EmpNo).FirstOrDefault()!;
+            EmployeeEntity targetEntity = _context.Employees.Where(e => e.EmpNo == (domain.EmpNo - 1000)).FirstOrDefault()!;
             EmployeeEntity updateEntity = _adapter.Convert(domain);
 
             targetEntity.EmpName = updateEntity.EmpName;

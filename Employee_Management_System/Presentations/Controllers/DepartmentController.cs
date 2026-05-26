@@ -186,17 +186,9 @@ public class DepartmentController : Controller
         if(isRegister == 1)
         {
             Department domain = _adapter.Restore(vm);
+            _service.UpdateDepartment(number, domain);
 
-            if(number == domain.DeptNo)
-            {
-                _service.UpdateDepartment(number, domain);
-
-                return RedirectToAction("DepartmentList");
-            }
-            else
-            {
-                return RedirectToAction("DepartmentList");   
-            }
+            return RedirectToAction("DepartmentList");
         }
         else
         {

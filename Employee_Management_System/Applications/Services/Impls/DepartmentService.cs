@@ -45,13 +45,45 @@ public class DepartmentService : IDepartmentService
 
     public void UpdateDepartment(int no, Department domain)
     {
-        //更新先の値に重複しているものがないか
-        if(_departmentRepository.FindByNumber(domain.DeptNo) == null && !_departmentRepository.HasSameDeptName(domain.DeptName))
+
+        //元の部署番号(no)が存在するか.
+        if(_departmentRepository.FindByNumber(no) != null)
         {
-            //元の部署番号(no)が存在するか
-            if(_departmentRepository.FindByNumber(no) != null)
+            if(no == domain.DeptNo) // 部署名を変えるだけなので、外部キー制約にひっかからない.
             {
-                _departmentRepository.UpdateByNumber(no, domain);   
+                _departmentRepository.UpdateNameByNumber(no, domain);   
+            }
+            else // 部署番号が変わるので、該当する社員の所属部署を一時的にNullにしてから部署更新を行い、更新後の所属部署を割り当てる.
+            {
+                /*
+                    sameDepartmentList:更新する部署に所属している社員のリスト.
+                    sameDepartmentNullList:社員の所属部署を一時的にNullにしたリスト.
+                    sameDepartmentNewList:社員の所属部署に新たな所属部署を割り当てたリスト.
+                */
+                List<Employee> sameDepartmentList = _employeeRepository.FindAll().Where(e => e.DeptNo == no).ToList();
+                if(sameDepartmentList.Count() == 0) // 誰も所属していない
+                {
+                    _departmentRepository.DeleteByNumber(no);
+                    _departmentRepository.Add(domain);
+                }
+                else
+                {
+                    List<Employee> sameDepartmentNullList = new List<Employee>();
+                    List<Employee> sameDepartmentNewList = new List<Employee>();
+                    sameDepartmentList.ForEach(e => sameDepartmentNullList.Add(new Employee(e.EmpNo, e.EmpName, e.Birthday, e.MailAddress, null)));
+                    sameDepartmentList.ForEach(e => sameDepartmentNewList.Add(new Employee(e.EmpNo, e.EmpName, e.Birthday, e.MailAddress, domain.DeptNo)));
+
+                    foreach(Employee emp in sameDepartmentNullList)
+                    {
+                        _employeeRepository.UpdateByNumber(emp);
+                    }
+                    _departmentRepository.DeleteByNumber(no);
+                    _departmentRepository.Add(domain);
+                    foreach(Employee emp in sameDepartmentNewList)
+                    {
+                        _employeeRepository.UpdateByNumber(emp);
+                    }
+                } 
             }
         }
     }

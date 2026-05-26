@@ -80,14 +80,13 @@ public class DepartmentRepository : IDepartmentRepository
         }
     }
 
-    public void UpdateByNumber(int number, Department domain)
+    public void UpdateNameByNumber(int number, Department domain)
     {
         try
         {
             DepartmentEntity targetEntity = _context.Departments.Where(d => d.DeptNo == number).FirstOrDefault()!;
             DepartmentEntity updateEntity = _adapter.Convert(domain);
 
-            targetEntity.DeptNo = updateEntity.DeptNo;
             targetEntity.DeptName = updateEntity.DeptName;
 
             _context.SaveChanges();

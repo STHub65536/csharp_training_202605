@@ -15,7 +15,7 @@ public interface IDepartmentRepository
 
     void Add(Department domain);
 
-    void UpdateByNumber(int number, Department domain);
+    void UpdateNameByNumber(int number, Department domain);
 
     void DeleteByNumber(int number);
 }
