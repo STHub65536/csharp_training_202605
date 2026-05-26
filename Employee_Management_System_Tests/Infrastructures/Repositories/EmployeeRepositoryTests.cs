@@ -202,7 +202,7 @@ public class EmployeeRepositoryTests
     [TestMethod]
     public void UpdateByNumber_WhenTargetNotNull()
     {
-        var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
+        var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
 
         _repository.UpdateByNumber(employee);
 
@@ -216,9 +216,25 @@ public class EmployeeRepositoryTests
     public void UpdateNameByNumber_WhenTargetNull()
     {
         _context.Dispose();
-        var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
+        var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.UpdateByNumber(employee));
+        Assert.IsInstanceOfType<InternalException>(exception); 
+    }
+
+    [TestMethod]
+    public void DeleteByNumber_WhenTargetNotNull()
+    {
+        _repository.DeleteByNumber(1);
+
+        var result = _repository.FindByNumber(1);
+        Assert.IsNull(result);
+    }
+
+    [TestMethod]
+    public void DeleteByNumber_WhenTargetNull()
+    {
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.DeleteByNumber(1000));
         Assert.IsInstanceOfType<InternalException>(exception); 
     }
 }
