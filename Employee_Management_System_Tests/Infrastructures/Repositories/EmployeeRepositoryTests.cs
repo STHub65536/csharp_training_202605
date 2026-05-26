@@ -99,6 +99,15 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
+    public void FindAll_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.FindAll());
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
     public void FindByNumber_WhenNumberCorrect()
     {
         var actual = _repository.FindByNumber(1);
@@ -119,6 +128,15 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
+    public void FindByNumber_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.FindByNumber(1));
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
     public void HasSameMailAddress_WhenMailAddressExists()
     {
         var actual = _repository.HasSameMailAddress("foo89732@ezweb.ne.jp");
@@ -130,6 +148,15 @@ public class EmployeeRepositoryTests
     {
         var actual = _repository.HasSameMailAddress("hogehoge@example.com");
         IsFalse(actual);
+    }
+
+    [TestMethod]
+    public void HasSameMailAddress_WhenDbAccessError()
+    {
+        _context.Dispose();
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.HasSameMailAddress("foo89732@ezweb.ne.jp"));
+        Assert.IsInstanceOfType<InternalException>(exception);
     }
 
     [TestMethod]
@@ -160,7 +187,7 @@ public class EmployeeRepositoryTests
         var employee = new Employee("あああああああああああああああああああああ", new DateOnly(2000,1,1), "foo@gmail.com", 101); // 社員名:21文字(最大20文字)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));
-        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+        Assert.IsInstanceOfType<InternalException>(exception);
     }
 
     [TestMethod]
@@ -169,6 +196,29 @@ public class EmployeeRepositoryTests
         var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "abcdefghijklmnopqrstuvwxyz123456789123456@gmail.com", null); // メールアドレス:51文字(50文字制限)
 
         var exception = Assert.ThrowsException<InternalException>(() => _repository.Add(employee));
-        Assert.IsInstanceOfType<DbUpdateException>(exception.InnerException);
+        Assert.IsInstanceOfType<InternalException>(exception);
+    }
+
+    [TestMethod]
+    public void UpdateByNumber_WhenTargetNotNull()
+    {
+        var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
+
+        _repository.UpdateByNumber(employee);
+
+        var result = _repository.FindAll().Where(e => e.MailAddress.Equals("hogehogehoge@gmail.com")).FirstOrDefault();
+        Assert.AreEqual("田中次郎", result.EmpName);
+        Assert.AreEqual("2000-01-01", result.Birthday.ToString("yyyy-MM-dd"));
+        Assert.AreEqual(101, result.DeptNo);
+    }
+
+    [TestMethod]
+    public void UpdateNameByNumber_WhenTargetNull()
+    {
+        _context.Dispose();
+        var employee = new Employee("田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
+
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.UpdateByNumber(employee));
+        Assert.IsInstanceOfType<InternalException>(exception); 
     }
 }
