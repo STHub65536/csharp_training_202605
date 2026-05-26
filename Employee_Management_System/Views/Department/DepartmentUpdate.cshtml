@@ -5,7 +5,7 @@
 <h5>変更したい項目を書き換えてください</h5>
 
 <form asp-controller="Department" asp-action="DepartmentUpdate" method="post">
-    <input type="" name="number" value="@ViewData["Number"]" readonly>
+    <input type="hidden" name="number" value="@ViewData["Number"]" readonly>
     <label asp-for="DeptNo" class="form-label">部署番号</label>
     <div><input type="text" asp-for="DeptNo" class="form-control w-50" placeholder="100～999までの数字で入力"></div>
     <div>

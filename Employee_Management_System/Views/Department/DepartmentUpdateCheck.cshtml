@@ -16,7 +16,7 @@
 </table>
 <div class="d-flex justify-content-center">
     <form asp-area="" asp-controller="Department" asp-action="DepartmentUpdateCheck" method="post">
-        <input type="text" name="number" class="form-control" value="@ViewData["OriginNumber"]" readonly>
+        <input type="hidden" name="number" class="form-control" value="@ViewData["OriginNumber"]" readonly>
 
         <input type="hidden" asp-for="DeptNo" class="form-control" value="@Model.DeptNo" readonly>
         <input type="hidden" asp-for="DeptName" class="form-control" value="@Model.DeptName" readonly>
