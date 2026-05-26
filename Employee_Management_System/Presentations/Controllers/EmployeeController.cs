@@ -71,7 +71,8 @@ public class EmployeeController : Controller
 
         Employee domain = _employeeAdapter.Restore(vm);
         bool isDifferent = _employeeService.IsEmployeeDifferent(domain);
-        bool isCorrect = domain.CheckCorrectAge();
+        bool isCorrect;
+        isCorrect = domain.CheckCorrectAge();
         if (isDifferent && isCorrect)
         {
             TempData["EmployeeForm"]  = JsonSerializer.Serialize(vm);
@@ -98,7 +99,7 @@ public class EmployeeController : Controller
     }
 
     [HttpGet("Register/Confirm")]
-    public IActionResult Check()
+    public IActionResult EmployeeCheck()
     {
         string? json = (string?)TempData["EmployeeForm"];
         if (string.IsNullOrWhiteSpace(json))
@@ -128,29 +129,125 @@ public class EmployeeController : Controller
     }
 
     [HttpGet("Update")]
-    public IActionResult EmployeeUpdate([FromQuery] int number)
+    public IActionResult EmployeeUpdate(int number)
     {
-        Employee domain = _employeeService.FindEmployee(number);
-        EmployeeViewModel vm = _employeeAdapter.Convert(domain);
+        string? json = (string?)TempData["InitializeForm"];
         
-        vm.DeptList.Add(new SelectListItem{Text="無所属", Value= "0"});
-        List<DepartmentViewModel> departmentVM = _departmentService.GetDepartmentList().Select(d => _departmentAdapter.Convert(d)).ToList();
-        departmentVM.ForEach(d => {
-            string? deptNo = d.DeptNo?.ToString();
-            vm.DeptList.Add(new SelectListItem{Text=d.DeptName, Value= deptNo ?? ""});
-        });
-        vm.ChangedDeptNo = vm.DeptNo;
-
+        ViewData["Number"] = number;
+        EmployeeViewModel vm;
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            vm = _employeeAdapter.Convert(_employeeService.FindEmployee(number - 1000)!);
+            SetListItem(vm, _departmentService, _departmentAdapter);
+            vm.ChangedDeptNo = vm.DeptNo == null? 0 : vm.DeptNo;
+            return View(vm);
+        }
+        vm = JsonSerializer.Deserialize<EmployeeViewModel>(json!);
+        SetListItem(vm, _departmentService, _departmentAdapter);
+        vm.ChangedDeptNo = vm.DeptNo == null? 0 : vm.DeptNo;
         return View(vm);
     }
 
     [HttpPost("Update")]
-    public IActionResult EmployeeUpdate(EmployeeViewModel vm)
+    public IActionResult EmployeeUpdate(int number, EmployeeViewModel vm)
     {
-        Employee domain = _employeeAdapter.Restore(vm);
-        _employeeService.UpdateEmployee(domain);
+        if (!ModelState.IsValid)
+        {
+            TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
 
-        return RedirectToAction("EmployeeList", "Employee");
+            if((ModelState["EmpName"]?.Errors.Count ?? 0) > 0)
+            {
+                TempData["NameError"] = ModelState["EmpName"]?.Errors[0].ErrorMessage;
+            }
+            if((ModelState["MailAddress"]?.Errors.Count ?? 0) > 0)
+            {
+                TempData["MailError"] = ModelState["MailAddress"]?.Errors[0].ErrorMessage;
+            }
+
+            return RedirectToAction("EmployeeUpdate", new{ number });
+        }
+
+        Employee domain = _employeeAdapter.Restore(vm);
+        
+        //重複チェック
+        bool isDifferent = true;
+        List<EmployeeViewModel> vmList = _employeeService.GetEmployeeList().Select(d => _employeeAdapter.Convert(d)).ToList();
+        foreach(EmployeeViewModel viewModel in vmList)
+        {
+            Console.WriteLine("empno:"+viewModel.EmpNo);
+            if(viewModel.EmpNo != number) //更新前データ以外の時に重複している値があればエラー
+            {
+                if(viewModel.MailAddress == vm.MailAddress)
+                {
+                    isDifferent = false;
+                }
+            }
+        }
+        
+        bool isCorrect = domain.CheckCorrectAge();
+        if (isDifferent && isCorrect)
+        {
+            TempData["EmployeeUpdateForm"]  = JsonSerializer.Serialize(vm);
+            Department? selectedDept = _departmentService.FindDepartment(domain.DeptNo != null? (int)domain.DeptNo : 0);
+            TempData["DeptName"] = selectedDept != null? _departmentAdapter.Convert(selectedDept).DeptName : "無所属";
+
+            return RedirectToAction("EmployeeUpdateCheck", new { number });
+        }
+        else
+        {
+            if (!isDifferent)
+            {
+                TempData["ExistingError"] = "入力されたメールアドレスは既に存在しています";    
+            }
+            if (!isCorrect)
+            {
+                TempData["AgeError"] = $"{Employee.MIN_AGE}～{Employee.MAX_AGE}歳までの方しか登録できません";
+            }
+
+            TempData["InitializeForm"]  = JsonSerializer.Serialize(vm);
+
+            return RedirectToAction("EmployeeUpdate", new { number });
+        }
+    }
+
+    [HttpGet("Update/Confirm")]
+    public IActionResult EmployeeUpdateCheck(int number)
+    {
+        string? json = (string?)TempData["EmployeeUpdateForm"];
+
+        TempData.Keep("EmployeeUpdateForm");
+        TempData.Keep("DeptName");
+        ViewData["OriginNumber"] = number;
+
+        EmployeeViewModel vm;
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            vm = new EmployeeViewModel();
+            return View(vm);
+        }
+        vm = JsonSerializer.Deserialize<EmployeeViewModel>(json!);
+        return View(vm);
+    }
+
+    [HttpPost("Update/Confirm")]
+    public IActionResult EmployeeUpdateCheck(int number, EmployeeViewModel vm, int isRegister)
+    {
+        if(isRegister == 1)
+        {
+            vm.EmpNo = number - 1000;
+            Console.WriteLine($"vm.EmpNo:{vm.EmpNo}");
+            Employee domain = _employeeAdapter.Restore(vm);
+            _employeeService.UpdateEmployee(domain);
+
+            return RedirectToAction("EmployeeList");
+        }
+        else
+        {
+            vm.DeptNo = vm.ChangedDeptNo;
+            TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+            
+            return RedirectToAction("EmployeeUpdate", new{ number });
+        }
     }
 
     public static void SetListItem(EmployeeViewModel vm, IDepartmentService _departmentService, DepartmentViewModelAdapter _departmentAdapter)

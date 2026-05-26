@@ -88,7 +88,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         try
         {
-            EmployeeEntity targetEntity = _context.Employees.Where(e => e.EmpNo == (domain.EmpNo - 1000)).FirstOrDefault()!;
+            EmployeeEntity targetEntity = _context.Employees.Where(e => e.EmpNo == domain.EmpNo).FirstOrDefault()!;
             EmployeeEntity updateEntity = _adapter.Convert(domain);
 
             targetEntity.EmpName = updateEntity.EmpName;
@@ -104,6 +104,11 @@ public class EmployeeRepository : IEmployeeRepository
         }
     }
 
+    /// <summary>
+    /// numberは+1000された値(表示値)なので、呼び出す前にあらかじめ-1000しておく。
+    /// </summary>
+    /// <param name="number"></param>
+    /// <exception cref="InternalException"></exception>
     public void DeleteByNumber(int number)
     {
         try

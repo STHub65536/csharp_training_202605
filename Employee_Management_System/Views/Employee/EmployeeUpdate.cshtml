@@ -1,0 +1,35 @@
+@using Employee_Management_System.Presentations.ViewModels
+@model EmployeeViewModel
+
+<h3>社員情報更新</h3>
+<h5>変更したい項目を書き換えてください</h5>
+<form asp-controller="Employee" asp-action="EmployeeUpdate" method="post">
+    <input type="hidden" name="number" value="@ViewData["Number"]" readonly>
+    <label asp-for="EmpName" class="form-label">社員名</label>
+    <div><input type="text" asp-for="EmpName" class="form-control w-50"></div>
+    <div>
+        <span asp-validation-for="EmpName" class="text-danger"></span>
+    </div>
+    <div>
+        <span class="text-danger">@TempData["NameError"]</span>
+    </div>
+    <label asp-for="Birthday" class="form-label">生年月日</label>
+    <div><input type="date" asp-for="Birthday" class="form-control w-50"></div>
+    <div>
+        <span class="text-danger">@TempData["AgeError"]</span>
+    </div>
+    <label asp-for="MailAddress" class="form-label">メールアドレス</label>
+    <div><input type="text" asp-for="MailAddress" class="form-control w-50"></div>
+    <div>
+        <span asp-validation-for="MailAddress" class="text-danger"></span>
+    </div>
+    <div>
+        <span class="text-danger">@TempData["MailError"]</span>
+    </div>
+    <div>
+        <span class="text-danger">@TempData["ExistingError"]</span>
+    </div>
+    <label asp-for="ChangedDeptNo" class="form-label">所属部署</label>
+    <select asp-for="ChangedDeptNo" asp-items="Model.DeptList" class="form-control w-50"></select>
+    <button type="submit" class="btn btn-primary mt-3" id="submitButton">確認画面へ</button>
+</form>

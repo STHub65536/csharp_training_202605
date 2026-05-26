@@ -70,8 +70,8 @@ public class DepartmentService : IDepartmentService
                 {
                     List<Employee> sameDepartmentNullList = new List<Employee>();
                     List<Employee> sameDepartmentNewList = new List<Employee>();
-                    sameDepartmentList.ForEach(e => sameDepartmentNullList.Add(new Employee(e.EmpNo, e.EmpName, e.Birthday, e.MailAddress, null)));
-                    sameDepartmentList.ForEach(e => sameDepartmentNewList.Add(new Employee(e.EmpNo, e.EmpName, e.Birthday, e.MailAddress, domain.DeptNo)));
+                    sameDepartmentList.ForEach(e => sameDepartmentNullList.Add(new Employee(e.EmpNo - 1000, e.EmpName, e.Birthday, e.MailAddress, null)));
+                    sameDepartmentList.ForEach(e => sameDepartmentNewList.Add(new Employee(e.EmpNo - 1000, e.EmpName, e.Birthday, e.MailAddress, domain.DeptNo)));
 
                     foreach(Employee emp in sameDepartmentNullList)
                     {

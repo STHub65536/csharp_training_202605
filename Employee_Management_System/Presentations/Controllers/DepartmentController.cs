@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Employee_Management_System.Applications.Domains;
@@ -85,7 +86,7 @@ public class DepartmentController : Controller
         }
     }
 
-    [HttpGet("Confirm")]
+    [HttpGet("Register/Confirm")]
     public IActionResult DepartmentCheck()
     {
         string? json = (string?)TempData["DepartmentForm"];
@@ -97,7 +98,7 @@ public class DepartmentController : Controller
         return View(vm);
     }
 
-    [HttpPost("Confirm")]
+    [HttpPost("Register/Confirm")]
     public IActionResult DepartmentCheck(DepartmentViewModel vm, int isRegister)
     {
         if(isRegister == 1)
@@ -138,6 +139,16 @@ public class DepartmentController : Controller
         if (!ModelState.IsValid)
         {
             TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+
+            if((ModelState["DeptNo"]?.Errors.Count ?? 0) > 0)
+            {
+                TempData["NumberError"] = ModelState["DeptNo"]?.Errors[0].ErrorMessage;
+            }
+            if((ModelState["DeptName"]?.Errors.Count ?? 0) > 0)
+            {
+                TempData["NameError"] = ModelState["DeptName"]?.Errors[0].ErrorMessage;
+            }
+            
             return RedirectToAction("DepartmentUpdate", new{ number });
         }
 
