@@ -75,7 +75,7 @@ public class DepartmentController : Controller
         {
             TempData["DepartmentForm"]  = JsonSerializer.Serialize(vm);
 
-            return RedirectToAction("Check");
+            return RedirectToAction("DepartmentCheck");
         }
         else
         {
@@ -86,7 +86,7 @@ public class DepartmentController : Controller
     }
 
     [HttpGet("Confirm")]
-    public IActionResult Check()
+    public IActionResult DepartmentCheck()
     {
         string? json = (string?)TempData["DepartmentForm"];
         if (string.IsNullOrWhiteSpace(json))
@@ -98,7 +98,7 @@ public class DepartmentController : Controller
     }
 
     [HttpPost("Confirm")]
-    public IActionResult Check(DepartmentViewModel vm, int isRegister)
+    public IActionResult DepartmentCheck(DepartmentViewModel vm, int isRegister)
     {
         if(isRegister == 1)
         {
@@ -119,14 +119,8 @@ public class DepartmentController : Controller
     public IActionResult DepartmentUpdate(int number)
     {
         string? json = (string?)TempData["InitializeForm"];
-        if(TempData["OriginNumber"] != null)
-        {
-            ViewData["Number"] = TempData["OriginNumber"];
-        }
-        else
-        {
-            ViewData["Number"] = number;
-        }
+        
+        ViewData["Number"] = number;
         DepartmentViewModel vm;
         if (string.IsNullOrWhiteSpace(json))
         {
@@ -143,53 +137,72 @@ public class DepartmentController : Controller
     {
         if (!ModelState.IsValid)
         {
-            return View("DepartmentUpdate", vm);
+            TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+            return RedirectToAction("DepartmentUpdate", new{ number });
         }
 
-        bool isDifferent = _service.IsDepartmentDifferent(_adapter.Restore(vm));
-        if (isDifferent)
+        //重複チェック
+        List<DepartmentViewModel> vmList = _service.GetDepartmentList().Select(d => _adapter.Convert(d)).ToList();
+        foreach(DepartmentViewModel viewModel in vmList)
         {
-            TempData["DepartmentUpdateForm"] = JsonSerializer.Serialize(vm);
-            TempData["OriginNumber"] = number;
+            if(viewModel.DeptNo != number) //更新前データ以外の時に重複している値があればエラー
+            {
+                if(viewModel.DeptNo == vm.DeptNo || viewModel.DeptName == vm.DeptName)
+                {
+                    TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
+                    TempData["ExistingError"] = "更新しようとしている部署番号もしくは部署名は既に存在しています";
 
-            return RedirectToAction("UpdateCheck");
+                    return RedirectToAction("DepartmentUpdate", new{ number });
+                }
+            }
         }
-        else
-        {
-            ViewData["ExistingError"] = "入力された部署番号または部署名は既に存在しています";
+        
+        TempData["DepartmentUpdateForm"] = JsonSerializer.Serialize(vm);
 
-            return View(vm);
-        }
+        return RedirectToAction("DepartmentUpdateCheck", new{ number });
     }
 
     [HttpGet("Update/Confirm")]
-    public IActionResult UpdateCheck()
+    public IActionResult DepartmentUpdateCheck(int number)
     {
         string? json = (string?)TempData["DepartmentUpdateForm"];
+
+        TempData.Keep("DepartmentUpdateForm");
+        ViewData["OriginNumber"] = number;
+
+        DepartmentViewModel vm;
         if (string.IsNullOrWhiteSpace(json))
         {
-            return RedirectToAction("DepartmentRegister");
+            vm = new DepartmentViewModel();
+            return View(vm);
         }
-        DepartmentViewModel vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
+        vm = JsonSerializer.Deserialize<DepartmentViewModel>(json!);
         return View(vm);
     }
 
     [HttpPost("Update/Confirm")]
-    public IActionResult UpdateCheck(int number, DepartmentViewModel vm, int isRegister)
+    public IActionResult DepartmentUpdateCheck(int number, DepartmentViewModel vm, int isRegister)
     {
         if(isRegister == 1)
         {
             Department domain = _adapter.Restore(vm);
-            _service.UpdateDepartment(number, domain);
 
-            return RedirectToAction("DepartmentList");
+            if(number == domain.DeptNo)
+            {
+                _service.UpdateDepartment(number, domain);
+
+                return RedirectToAction("DepartmentList");
+            }
+            else
+            {
+                return RedirectToAction("DepartmentList");   
+            }
         }
         else
         {
             TempData["InitializeForm"] = JsonSerializer.Serialize(vm);
-            TempData["OriginNumber"] = number;
             
-            return RedirectToAction("DepartmentUpdate");
+            return RedirectToAction("DepartmentUpdate", new{ number });
         }
     }
 }
