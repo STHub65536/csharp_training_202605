@@ -200,7 +200,7 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
-    public void Update_WhenTargetNotNull()
+    public void Update_WhenTargetCorrect()
     {
         var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
 
@@ -213,7 +213,7 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
-    public void UpdateName_WhenTargetNull()
+    public void UpdateName_WhenDbAccessError()
     {
         _context.Dispose();
         var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
