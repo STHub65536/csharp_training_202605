@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using Employee_Management_System.Applications.Domains;
 using Employee_Management_System.Applications.Services;
 using Employee_Management_System.Presentations.ViewModels;
@@ -39,7 +40,10 @@ public class EmployeeController : Controller
     [HttpPost("List")]
     public IActionResult EmployeeList(int empNo)
     {
+        EmployeeViewModel targetVM = _employeeAdapter.Convert(_employeeService.FindEmployee(empNo)!);
         _employeeService.DeleteEmployee(empNo);
+
+        TempData["DeleteSuccess"] = $"{targetVM.EmpName}さん(社員番号:{empNo})の削除に成功しました";
         return RedirectToAction();
     }
 
@@ -117,7 +121,9 @@ public class EmployeeController : Controller
         {
             Employee domain = _employeeAdapter.Restore(vm);
             _employeeService.AddEmployee(domain);
+            int? empNo = _employeeService.GetEmployeeList().FirstOrDefault(e => e.MailAddress == vm.MailAddress).DeptNo;
 
+            TempData["RegisterSuccess"] = $"{vm.EmpName}(社員番号:{empNo! + 1000})の登録に成功しました";
             return RedirectToAction("EmployeeList");
         }
         else
@@ -230,15 +236,22 @@ public class EmployeeController : Controller
     }
 
     [HttpPost("Update/Confirm")]
-    public IActionResult EmployeeUpdateCheck(int number, EmployeeViewModel vm, int isRegister)
+    public IActionResult EmployeeUpdateCheck(int number, string newDeptName, EmployeeViewModel vm, int isRegister)
     {
         if(isRegister == 1)
         {
             vm.EmpNo = number - 1000;
-            Console.WriteLine($"vm.EmpNo:{vm.EmpNo}");
+
+            Employee? originDomain = _employeeService.FindEmployee((int)vm.EmpNo)!;
+            EmployeeViewModel originVM = _employeeAdapter.Convert(originDomain);
+
+            Department? selectedDept = _departmentService.FindDepartment(originDomain.DeptNo ?? 0);
+            string originDeptName = selectedDept != null? _departmentAdapter.Convert(selectedDept).DeptName : "無所属";
+            
             Employee domain = _employeeAdapter.Restore(vm);
             _employeeService.UpdateEmployee(domain);
 
+            TempData["UpdateSuccess"] = $"社員の更新に成功しました<br>社員番号:{originVM.EmpNo} , 社員名:{originVM.EmpName} → {vm.EmpName} , 所属部署:{originDeptName} → {newDeptName}<br>生年月日:{vm.Birthday.ToString("yyyy-MM-dd")}<br>メールアドレス:{originDomain.MailAddress} → {vm.MailAddress}";
             return RedirectToAction("EmployeeList");
         }
         else

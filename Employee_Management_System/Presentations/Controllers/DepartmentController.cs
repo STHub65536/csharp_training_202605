@@ -36,7 +36,10 @@ public class DepartmentController : Controller
     {
         if (!_service.HasEmployees(deptNo))
         {
+            DepartmentViewModel targetVM = _adapter.Convert(_service.FindDepartment(deptNo)!);
             _service.DeleteDepartment(deptNo);
+
+            TempData["DeleteSuccess"] = $"{targetVM.DeptName}(部署番号:{targetVM.DeptNo})の削除に成功しました";
             return RedirectToAction();
         }
         else
@@ -106,6 +109,7 @@ public class DepartmentController : Controller
             Department domain = _adapter.Restore(vm);
             _service.AddDepartment(domain);
 
+            TempData["RegisterSuccess"] = $"{vm.DeptName}(部署番号:{vm.DeptNo})の登録に成功しました";
             return RedirectToAction("DepartmentList");
         }
         else
@@ -196,9 +200,11 @@ public class DepartmentController : Controller
     {
         if(isRegister == 1)
         {
+            DepartmentViewModel originVM = _adapter.Convert(_service.FindDepartment(number)!);
             Department domain = _adapter.Restore(vm);
             _service.UpdateDepartment(number, domain);
 
+            TempData["UpdateSuccess"] = $"部署の更新に成功しました<br>部署番号:{originVM.DeptNo} → {vm.DeptNo} , 部署名:{originVM.DeptName} → {vm.DeptName}";
             return RedirectToAction("DepartmentList");
         }
         else

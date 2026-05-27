@@ -9,9 +9,29 @@
         <a asp-area="" asp-controller="Department" asp-action="DepartmentRegister">部署を登録する</a>
     }
     else{
-         @if(ViewData["DeleteError"] != null){
+        
+        if(ViewData["DeleteError"] != null)
+        {
             <div class="alert alert-danger">
                 @ViewData["DeleteError"]
+            </div>
+        }
+        if(TempData["DeleteSuccess"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["DeleteSuccess"]
+            </div>
+        }
+        if(TempData["RegisterSuccess"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["RegisterSuccess"]
+            </div>
+        }
+        if(TempData["UpdateSuccess"] != null)
+        {
+            <div class="alert alert-success">
+                @Html.Raw(@TempData["UpdateSuccess"])
             </div>
         }
         <div class="d-flex justify-content-between align-items-center mb-3">
