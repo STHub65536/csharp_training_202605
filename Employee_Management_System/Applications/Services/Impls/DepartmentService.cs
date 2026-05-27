@@ -43,15 +43,15 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public void UpdateDepartment(int no, Department domain)
+    public void UpdateDepartment(int number, Department domain)
     {
 
         //元の部署番号(no)が存在するか.
-        if(_departmentRepository.FindByNumber(no) != null)
+        if(_departmentRepository.FindByNumber(number) != null)
         {
-            if(no == domain.DeptNo) // 部署名を変えるだけなので、外部キー制約にひっかからない.
+            if(number == domain.DeptNo) // 部署名を変えるだけなので、外部キー制約にひっかからない.
             {
-                _departmentRepository.UpdateNameByNumber(no, domain);   
+                _departmentRepository.UpdateNameByNumber(number, domain);   
             }
             else // 部署番号が変わるので、該当する社員の所属部署を一時的にNullにしてから部署更新を行い、更新後の所属部署を割り当てる.
             {
@@ -60,10 +60,10 @@ public class DepartmentService : IDepartmentService
                     sameDepartmentNullList:社員の所属部署を一時的にNullにしたリスト.
                     sameDepartmentNewList:社員の所属部署に新たな所属部署を割り当てたリスト.
                 */
-                List<Employee> sameDepartmentList = _employeeRepository.FindAll().Where(e => e.DeptNo == no).ToList();
+                List<Employee> sameDepartmentList = _employeeRepository.FindAll().Where(e => e.DeptNo == number).ToList();
                 if(sameDepartmentList.Count() == 0) // 誰も所属していない
                 {
-                    _departmentRepository.DeleteByNumber(no);
+                    _departmentRepository.DeleteByNumber(number);
                     _departmentRepository.Add(domain);
                 }
                 else
@@ -77,7 +77,7 @@ public class DepartmentService : IDepartmentService
                     {
                         _employeeRepository.UpdateByNumber(emp);
                     }
-                    _departmentRepository.DeleteByNumber(no);
+                    _departmentRepository.DeleteByNumber(number);
                     _departmentRepository.Add(domain);
                     foreach(Employee emp in sameDepartmentNewList)
                     {
@@ -88,19 +88,19 @@ public class DepartmentService : IDepartmentService
         }
     }
 
-    public void DeleteDepartment(int no)
+    public void DeleteDepartment(int number)
     {
         //元の部署番号(no)が存在するか
-        if(_departmentRepository.FindByNumber(no) != null)
+        if(_departmentRepository.FindByNumber(number) != null)
         {
-            _departmentRepository.DeleteByNumber(no);   
+            _departmentRepository.DeleteByNumber(number);   
         }
     }
 
-    public bool HasEmployees(int no)
+    public bool HasEmployees(int number)
     {
         List<Employee> domainList = _employeeRepository.FindAll();
         
-        return domainList.Where(d => d.DeptNo == no).Count() >= 1;
+        return domainList.Where(d => d.DeptNo == number).Count() >= 1;
     }
 }

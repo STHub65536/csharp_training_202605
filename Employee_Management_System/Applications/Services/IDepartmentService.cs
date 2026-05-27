@@ -11,7 +11,7 @@ public interface IDepartmentService
     Department? FindDepartment(int number);
     bool IsDepartmentDifferent(Department domain);
     void AddDepartment(Department domain);
-    void UpdateDepartment(int no, Department domain);
-    void DeleteDepartment(int no);
-    bool HasEmployees(int no);
+    void UpdateDepartment(int number, Department domain);
+    void DeleteDepartment(int number);
+    bool HasEmployees(int number);
 }
