@@ -14,7 +14,7 @@
         <span class="text-danger">@TempData["NameError"]</span>
     </div>
     <label asp-for="Birthday" class="form-label">生年月日</label>
-    <div><input type="date" asp-for="Birthday" class="form-control w-50"></div>
+    <div><input type="date" asp-for="Birthday" class="form-control w-50" readonly></div>
     <div>
         <span class="text-danger">@TempData["AgeError"]</span>
     </div>
