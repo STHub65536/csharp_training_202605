@@ -40,7 +40,7 @@ public class EmployeeController : Controller
     [HttpPost("List")]
     public IActionResult EmployeeList(int empNo)
     {
-        EmployeeViewModel targetVM = _employeeAdapter.Convert(_employeeService.FindEmployee(empNo)!);
+        EmployeeViewModel targetVM = _employeeAdapter.Convert(_employeeService.FindEmployee(empNo - 1000)!);
         _employeeService.DeleteEmployee(empNo);
 
         TempData["DeleteSuccess"] = $"{targetVM.EmpName}さん(社員番号:{empNo})の削除に成功しました";
