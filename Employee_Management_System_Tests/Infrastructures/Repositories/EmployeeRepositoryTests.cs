@@ -200,11 +200,11 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
-    public void UpdateByNumber_WhenTargetNotNull()
+    public void Update_WhenTargetNotNull()
     {
         var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
 
-        _repository.UpdateByNumber(employee);
+        _repository.Update(employee);
 
         var result = _repository.FindAll().Where(e => e.MailAddress.Equals("hogehogehoge@gmail.com")).FirstOrDefault();
         Assert.AreEqual("田中次郎", result.EmpName);
@@ -213,12 +213,12 @@ public class EmployeeRepositoryTests
     }
 
     [TestMethod]
-    public void UpdateNameByNumber_WhenTargetNull()
+    public void UpdateName_WhenTargetNull()
     {
         _context.Dispose();
         var employee = new Employee(1, "田中次郎", new DateOnly(2000,1,1), "hogehogehoge@gmail.com", 101);
 
-        var exception = Assert.ThrowsException<InternalException>(() => _repository.UpdateByNumber(employee));
+        var exception = Assert.ThrowsException<InternalException>(() => _repository.Update(employee));
         Assert.IsInstanceOfType<InternalException>(exception); 
     }
 

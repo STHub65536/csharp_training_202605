@@ -84,7 +84,7 @@ public class EmployeeRepository : IEmployeeRepository
         }
     }
 
-    public void UpdateByNumber(Employee domain)
+    public void Update(Employee domain)
     {
         try
         {

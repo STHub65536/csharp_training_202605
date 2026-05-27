@@ -42,7 +42,7 @@ public class EmployeeService : IEmployeeService
 
     public void UpdateEmployee(Employee domain)
     {
-        _repository.UpdateByNumber(domain);   
+        _repository.Update(domain);   
     }
 
     public void DeleteEmployee(int number)

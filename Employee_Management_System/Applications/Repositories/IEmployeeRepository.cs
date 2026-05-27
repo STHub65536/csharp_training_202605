@@ -15,7 +15,7 @@ public interface IEmployeeRepository
 
     void Add(Employee domain);
 
-    void UpdateByNumber(Employee domain);
+    void Update(Employee domain);
 
     void DeleteByNumber(int number);
 }

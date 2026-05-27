@@ -75,13 +75,13 @@ public class DepartmentService : IDepartmentService
 
                     foreach(Employee emp in sameDepartmentNullList)
                     {
-                        _employeeRepository.UpdateByNumber(emp);
+                        _employeeRepository.Update(emp);
                     }
                     _departmentRepository.DeleteByNumber(number);
                     _departmentRepository.Add(domain);
                     foreach(Employee emp in sameDepartmentNewList)
                     {
-                        _employeeRepository.UpdateByNumber(emp);
+                        _employeeRepository.Update(emp);
                     }
                 } 
             }
